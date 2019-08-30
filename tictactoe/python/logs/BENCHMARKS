@@ -1,0 +1,75 @@
+# First version
+
+time -f "user %U" python3.7 main.py immutable
+total terminal states: 255168
+user 4.23
+
+time -f "user %U" pypy3 main.py immutable
+total terminal states: 255168
+user 1.08
+
+time -f "user %U" python3.7 main.py mutable
+total terminal states: 255168
+user 4.21
+
+time -f "user %U" pypy3 main.py mutable
+total terminal states: 255168
+user 0.64
+
+# Second version
+# - remove duplicated calls to is_winner
+
+time -f "user %U" python3.7 main.py immutable
+total terminal states: 255168
+user 2.60
+
+time -f "user %U" pypy3 main.py immutable
+total terminal states: 255168
+user 0.90
+
+time -f "user %U" python3.7 main.py mutable
+total terminal states: 255168
+user 2.64
+
+time -f "user %U" pypy3 main.py mutable
+total terminal states: 255168
+user 0.56
+
+# Third version (main2.py)
+# - remove the abstractBoard class
+
+time -f "user %U" python3.7 main2.py immutable
+total terminal states: 255168
+user 2.52
+
+time -f "user %U" pypy3 main2.py immutable
+total terminal states: 255168
+user 0.80
+
+time -f "user %U" python3.7 main2.py mutable
+total terminal states: 255168
+user 2.54
+
+time -f "user %U" pypy3 main2.py mutable
+total terminal states: 255168
+user 0.54
+
+# Fourth version
+# - incline winner very agressively
+# cpython gets quicker than python!
+
+time -f "user %U" python3.7 main.py immutable
+total terminal states: 255168
+user 1.80
+
+time -f "user %U" pypy3 main.py immutable
+total terminal states: 255168
+user 8.04
+
+time -f "user %U" python3.7 main.py mutable
+total terminal states: 255168
+user 1.81
+
+time -f "user %U" pypy3 main.py mutable
+total terminal states: 255168
+user 3.44

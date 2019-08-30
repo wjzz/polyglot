@@ -1,0 +1,36 @@
+# with printings
+
+5467: ......OX. ==> 0
+5468: ......OXX ==> 1
+5469: .......XO ==> 0
+5470: ........X ==> 0
+5471: O.......X ==> 1
+5472: .O......X ==> 1
+5473: ..O.....X ==> 1
+5474: ...O....X ==> 1
+5475: ....O...X ==> 0
+5476: .....O..X ==> 1
+5477: ......O.X ==> 1
+5478: .......OX ==> 1
+defaultdict(<class 'int'>, {0: 1068, 1: 2836, -1: 1574})
+
+real    0m7,022s
+user    0m6,970s
+sys     0m0,064s
+
+# without printing every line
+
+wjzz:~/research/polyglot/tictactoe/python$ time pypy3 run_gen.py 
+defaultdict(<class 'int'>, {0: 1068, 1: 2836, -1: 1574})
+real    0m5,890s
+
+wjzz:~/research/polyglot/tictactoe/python$ time python3.7 run_gen.py 
+real    0m32,684s
+
+# with memoization of the minimax results
+
+wjzz:~/research/polyglot/tictactoe/python$ time pypy3 run_gen.py 
+real    0m2,855s
+
+wjzz:~/research/polyglot/tictactoe/python$ time python3.7 run_gen.py 
+real    0m8,928s
