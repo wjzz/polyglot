@@ -1,0 +1,9 @@
+.vscode
+*/**/.vscode
+*/**/node_modules
+*/**/myvenv
+*/**/__pycache__/
+*/**/.mypy_cache
+*/**/rust/**/target
+*.pdf
+
