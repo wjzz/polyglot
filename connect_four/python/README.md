@@ -17,4 +17,6 @@ Todo next
 =========
 
 * Implement a evaluation function
+* Implement a computer player
 * Implement Minimax
+* Implement a GUI in React and a Flask API in Python
