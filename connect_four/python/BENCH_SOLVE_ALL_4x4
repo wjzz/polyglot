@@ -1,0 +1,83 @@
+# First version - simple traversal of all nodes
+
+# 4x4
+
+$ p solve.py 
+Current size [COLS x ROWS]: 4 x 4
+Depth  0:             1 states in 0.00s [0%] 0 / 1
+Depth  1:             5 states in 0.00s [0%] 0 / 4
+Depth  2:            21 states in 0.00s [0%] 0 / 16
+Depth  3:            85 states in 0.00s [0%] 0 / 64
+Depth  4:           341 states in 0.00s [0%] 0 / 256
+Depth  5:         1,361 states in 0.01s [0%] 0 / 1,020
+Depth  6:         5,381 states in 0.05s [0%] 0 / 4,020
+Depth  7:        20,921 states in 0.17s [1%] 252 / 15,540
+Depth  8:        78,425 states in 0.67s [0%] 564 / 57,504
+Depth  9:       285,329 states in 2.42s [3%] 6,660 / 206,904
+Depth 10:       975,833 states in 8.18s [3%] 23,564 / 690,504
+Depth 11:     3,136,337 states in 25.93s [6%] 142,020 / 2,160,504
+Depth 12:     9,128,433 states in 1.27m [7%] 466,776 / 5,992,096
+Depth 13:    23,840,457 states in 3.28m [13%] 1,967,796 / 14,712,024
+Current depth: 14 estimated time: 8.46m
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 4 x 4
+Depth  0:             1 states in 0.00s [0%] 0 / 1
+Depth  1:             5 states in 0.00s [0%] 0 / 4
+Depth  2:            21 states in 0.00s [0%] 0 / 16
+Depth  3:            85 states in 0.00s [0%] 0 / 64
+Depth  4:           341 states in 0.03s [0%] 0 / 256
+Depth  5:         1,361 states in 0.08s [0%] 0 / 1,020
+Depth  6:         5,381 states in 0.23s [0%] 0 / 4,020
+Depth  7:        20,921 states in 0.43s [1%] 252 / 15,540
+Depth  8:        78,425 states in 0.75s [0%] 312 / 57,504
+Depth  9:       285,329 states in 1.29s [2%] 6,096 / 206,904
+Depth 10:       975,833 states in 1.94s [2%] 16,904 / 690,504
+Depth 11:     3,136,337 states in 4.13s [5%] 118,456 / 2,160,504
+Depth 12:     9,128,433 states in 9.99s [5%] 324,756 / 5,992,096
+Depth 13:    23,840,457 states in 25.83s [10%] 1,501,020 / 14,712,024
+Depth 14:    52,691,377 states in 54.50s [11%] 3,258,664 / 28,850,920
+Depth 15:    95,447,457 states in 1.73m [16%] 7,142,796 / 42,756,080
+Depth 16:   131,060,741 states in 2.33m [100%] 35,613,284 / 35,613,284
+
+# Second version - simple memoizations
+
+$ python solve.py
+Current size [COLS x ROWS]: 4 x 4
+Depth  0:             1 states in 0.00s [0%] 0 / 1
+Depth  1:             5 states in 0.00s [0%] 0 / 4
+Depth  2:            21 states in 0.00s [0%] 0 / 16
+Depth  3:            73 states in 0.00s [0%] 0 / 52
+Depth  4:           233 states in 0.00s [0%] 0 / 160
+Depth  5:           669 states in 0.01s [0%] 0 / 436
+Depth  6:         1,797 states in 0.03s [0%] 0 / 1,128
+Depth  7:         4,309 states in 0.08s [2%] 60 / 2,512
+Depth  8:         9,393 states in 0.20s [0%] 48 / 5,084
+Depth  9:        18,669 states in 0.40s [5%] 520 / 9,276
+Depth 10:        33,457 states in 0.77s [2%] 436 / 14,788
+Depth 11:        55,177 states in 1.34s [10%] 2,222 / 21,720
+Depth 12:        81,875 states in 2.08s [7%] 1,988 / 26,698
+Depth 13:       110,797 states in 2.89s [17%] 5,118 / 28,922
+Depth 14:       135,709 states in 3.56s [16%] 4,018 / 24,912
+Depth 15:       153,785 states in 4.13s [28%] 5,086 / 18,076
+Depth 16:       161,029 states in 4.51s [100%] 7,244 / 7,244
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 4 x 4
+Depth  0:             1 states in 0.00s [0%] 0 / 1
+Depth  1:             5 states in 0.00s [0%] 0 / 4
+Depth  2:            21 states in 0.00s [0%] 0 / 16
+Depth  3:            73 states in 0.01s [0%] 0 / 52
+Depth  4:           233 states in 0.03s [0%] 0 / 160
+Depth  5:           669 states in 0.05s [0%] 0 / 436
+Depth  6:         1,797 states in 0.16s [0%] 0 / 1,128
+Depth  7:         4,309 states in 0.23s [2%] 60 / 2,512
+Depth  8:         9,393 states in 0.38s [0%] 48 / 5,084
+Depth  9:        18,669 states in 0.40s [5%] 520 / 9,276
+Depth 10:        33,457 states in 0.46s [2%] 436 / 14,788
+Depth 11:        55,177 states in 0.57s [10%] 2,222 / 21,720
+Depth 12:        81,875 states in 0.72s [7%] 1,988 / 26,698
+Depth 13:       110,797 states in 0.74s [17%] 5,118 / 28,922
+Depth 14:       135,709 states in 0.86s [16%] 4,018 / 24,912
+Depth 15:       153,785 states in 0.85s [28%] 5,086 / 18,076
+Depth 16:       161,029 states in 0.78s [100%] 7,244 / 7,244

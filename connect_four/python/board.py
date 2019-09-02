@@ -47,6 +47,32 @@ class Board:
         output += f"last = {self._last}\n"
         return output
 
+    # TODO: write unit tests for this
+    # NOTE: this is more like a full encoding that merely a hash
+    @property
+    def myhash(self):
+        h = 1
+        for col in self._cols:
+            for piece in col:
+                h <<= 2
+                if piece == Piece.X:
+                    h |= 0b01
+                else:
+                    h |= 0b10
+            h <<= 2 * (Config.ROWS - len(col))
+        return h
+        
+    @property
+    def str_hash(self):
+        output = ""
+        for row in reversed(range(Config.ROWS)):
+            for col in self._cols:
+                if row < len(col):
+                    output += str(col[row])
+                else:
+                    output += "."
+        return output
+
     @classmethod
     def from_str(cls, s):
         lines = s.splitlines()
