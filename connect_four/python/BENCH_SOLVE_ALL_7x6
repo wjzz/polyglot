@@ -1,0 +1,100 @@
+# First version - simple traversal of all nodes
+
+pypy3 solve.py 
+Current size [COLS x ROWS]: 7 x 6
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 0]
+Depth  1:             8 states in 0.00s [0%] 0 / 7 [memo size: 0]
+Depth  2:            57 states in 0.00s [0%] 0 / 49 [memo size: 0]
+Depth  3:           400 states in 0.02s [0%] 0 / 343 [memo size: 0]
+Depth  4:         2,801 states in 0.17s [0%] 0 / 2,401 [memo size: 0]
+Depth  5:        19,608 states in 0.48s [0%] 0 / 16,807 [memo size: 0]
+Depth  6:       137,257 states in 0.92s [0%] 0 / 117,649 [memo size: 0]
+Depth  7:       960,793 states in 1.65s [1%] 13,032 / 823,536 [memo size: 0]
+Depth  8:     6,634,027 states in 6.65s [0%] 44,430 / 5,673,234 [memo size: 0]
+Depth  9:    46,028,599 states in 41.01s [2%] 1,086,882 / 39,394,572 [memo size: 0]
+Current depth: 10 estimated time: 4.21m
+
+# Second version - traversal with memoization
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 7 x 6
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             8 states in 0.00s [0%] 0 / 7 [memo size: 8]
+Depth  2:            57 states in 0.01s [0%] 0 / 49 [memo size: 57]
+Depth  3:           295 states in 0.02s [0%] 0 / 238 [memo size: 295]
+Depth  4:         1,415 states in 0.12s [0%] 0 / 1,120 [memo size: 1,415]
+Depth  5:         5,678 states in 0.18s [0%] 0 / 4,263 [memo size: 5,678]
+Depth  6:        22,100 states in 0.30s [0%] 0 / 16,422 [memo size: 22,100]
+Depth  7:        76,959 states in 0.59s [1%] 728 / 54,859 [memo size: 76,959]
+Depth  8:       261,234 states in 1.84s [1%] 1,892 / 184,275 [memo size: 261,234]
+Depth  9:       819,420 states in 4.79s [3%] 19,412 / 558,186 [memo size: 819,420]
+Depth 10:     2,482,043 states in 13.44s [2%] 44,225 / 1,662,623 [memo size: 2,482,043]
+Current depth: 11 estimated time: 37.67s
+
+# ==> we can go 2 levels deeper with memoization, but memory use is big
+# ==> my computer frooze on level 12, because too much RAM was used (I have 8gb on my laptop)
+# at this moment, the hash function was represented as a string - this is not very memory efficient
+# we can easily compress this as a bit vector or as two bitboards
+
+# LIMIT MEMORY:
+
+$ ulimit -Sv 2000000
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 7 x 6
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             8 states in 0.00s [0%] 0 / 7 [memo size: 8]
+Depth  2:            57 states in 0.01s [0%] 0 / 49 [memo size: 57]
+Depth  3:           295 states in 0.02s [0%] 0 / 238 [memo size: 295]
+Depth  4:         1,415 states in 0.12s [0%] 0 / 1,120 [memo size: 1,415]
+Depth  5:         5,678 states in 0.18s [0%] 0 / 4,263 [memo size: 5,678]
+Depth  6:        22,100 states in 0.29s [0%] 0 / 16,422 [memo size: 22,100]
+Depth  7:        76,959 states in 0.60s [1%] 728 / 54,859 [memo size: 76,959]
+Depth  8:       261,234 states in 1.71s [1%] 1,892 / 184,275 [memo size: 261,234]
+Depth  9:       819,420 states in 4.82s [3%] 19,412 / 558,186 [memo size: 819,420]
+Depth 10:     2,482,043 states in 14.22s [2%] 44,225 / 1,662,623 [memo size: 2,482,043]
+Depth 11:     7,050,726 states in 40.41s [5%] 273,261 / 4,568,683 [memo size: 7,050,726]
+Current depth: 12 estimated time: 1.91m
+out of memory: couldn't allocate the next arena
+Aborted (core dumped)
+
+# Improve the hash function by changing the representation from string to a single int (encoding a bytestring)
+
+$ ulimit -Sv 2000000
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 7 x 6
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             8 states in 0.00s [0%] 0 / 7 [memo size: 8]
+Depth  2:            57 states in 0.00s [0%] 0 / 49 [memo size: 57]
+Depth  3:           295 states in 0.03s [0%] 0 / 238 [memo size: 295]
+Depth  4:         1,415 states in 0.11s [0%] 0 / 1,120 [memo size: 1,415]
+Depth  5:         5,678 states in 0.24s [0%] 0 / 4,263 [memo size: 5,678]
+Depth  6:        22,100 states in 0.23s [0%] 0 / 16,422 [memo size: 22,100]
+Depth  7:        76,959 states in 0.36s [1%] 728 / 54,859 [memo size: 76,959]
+Depth  8:       261,234 states in 1.38s [1%] 1,892 / 184,275 [memo size: 261,234]
+Depth  9:       819,420 states in 3.53s [3%] 19,412 / 558,186 [memo size: 819,420]
+Depth 10:     2,482,043 states in 10.82s [2%] 44,225 / 1,662,623 [memo size: 2,482,043]
+Depth 11:     7,050,726 states in 33.26s [5%] 273,261 / 4,568,683 [memo size: 7,050,726]
+Current depth: 12 estimated time: 1.70m
+Memory Error
+
+wjzz:~/prog/polyglot/connect_four/python$ ulimit -Sv 4000000
+wjzz:~/prog/polyglot/connect_four/python$ pypy3 solve.py 
+Current size [COLS x ROWS]: 7 x 6
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             8 states in 0.00s [0%] 0 / 7 [memo size: 8]
+Depth  2:            57 states in 0.00s [0%] 0 / 49 [memo size: 57]
+Depth  3:           295 states in 0.03s [0%] 0 / 238 [memo size: 295]
+Depth  4:         1,415 states in 0.12s [0%] 0 / 1,120 [memo size: 1,415]
+Depth  5:         5,678 states in 0.17s [0%] 0 / 4,263 [memo size: 5,678]
+Depth  6:        22,100 states in 0.14s [0%] 0 / 16,422 [memo size: 22,100]
+Depth  7:        76,959 states in 0.35s [1%] 728 / 54,859 [memo size: 76,959]
+Depth  8:       261,234 states in 1.47s [1%] 1,892 / 184,275 [memo size: 261,234]
+Depth  9:       819,420 states in 3.59s [3%] 19,412 / 558,186 [memo size: 819,420]
+Depth 10:     2,482,043 states in 10.46s [2%] 44,225 / 1,662,623 [memo size: 2,482,043]
+Depth 11:     7,050,726 states in 32.52s [5%] 273,261 / 4,568,683 [memo size: 7,050,726]
+Depth 12:    19,286,827 states in 1.61m [4%] 573,323 / 12,236,101 [memo size: 19,286,827]
+Current depth: 13 estimated time: 4.76m
+Aborted (core dumped)
+
+# Observations: cpython takes less memory than pypy3
+    

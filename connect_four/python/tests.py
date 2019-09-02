@@ -273,6 +273,69 @@ class BoardTest(unittest.TestCase):
             [],
             b.legal_moves)
 
+    def test_str_hash(self):
+        examples = [
+            "6 .......\n"
+            "5 .......\n"
+            "4 .......\n"
+            "3 .......\n"
+            "2 .......\n"
+            "1 .......\n"
+            "last = None\n"
+            ,
+            # horizontal
+            "6 .......\n"
+            "5 .......\n"
+            "4 .......\n"
+            "3 .O.O.X.\n"
+            "2 .O.OXO.\n"
+            "1 .XOXXXX\n"
+            "last = 6\n"
+            ,
+            # vertical
+            "6 .......\n"
+            "5 .......\n"
+            "4 .O.....\n"
+            "3 XO.....\n"
+            "2 XO.....\n"
+            "1 XOX....\n"
+            "last = 1\n"
+            ,
+        ]
+
+        results = [
+            "......."
+            "......."
+            "......."
+            "......."
+            "......."
+            "......."
+            ,
+            # horizontal
+            "......."
+            "......."
+            "......."
+            ".O.O.X."
+            ".O.OXO."
+            ".XOXXXX"
+            ,
+            # vertical
+            "......."
+            "......."
+            ".O....."
+            "XO....."
+            "XO....."
+            "XOX...."
+            ,
+        ]
+
+
+        for i, (example, result) in enumerate(zip(examples, results)):
+            with self.subTest(ex = i):
+                self.assertEqual(result, 
+                    Board.from_str(example).str_hash)
+
+
     def test_parsing(self):
         examples = [
             "6 .......\n"
