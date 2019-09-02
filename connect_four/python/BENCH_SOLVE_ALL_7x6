@@ -97,4 +97,3 @@ Current depth: 13 estimated time: 4.76m
 Aborted (core dumped)
 
 # Observations: cpython takes less memory than pypy3
-    
