@@ -2,10 +2,25 @@
 
 # Second version - simple memoization
 
-CUTOFF at 21 leads to memory error at the very end...
+CUTOFF at 21 leads to a memory error at the very end...
 
 CUTOFF at 20:
 
 Game solved. Result = 0
 Total visited nodes = 668,607,278
 Time = 23m
+
+AFTER OPTIMIZING HASH CALCULATION:
+
+Game solved. Result = 0
+Total visited nodes = 668,607,278
+Time = 18m
+
+# Third version - alpha beta prunning (unrelated to hashing)
+
+time pypy3 solve45.py 
+Current size [COLS x ROWS]: 5 x 5
+Game solved. Result = 0
+Total visited nodes = 2,135,732,339
+
+real	43m16,336s

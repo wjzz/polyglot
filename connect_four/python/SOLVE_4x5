@@ -7,11 +7,11 @@ Starting search at depth = 20
 Game solved. Result = 0
 Total visited nodes = 1,745,379
 
-real	0m7,883s
+real	7,883s
 
 # Alpha-beta prunning
 
 Game solved. Result = 0
 Total visited nodes = 1,227,610
 
-real	0m5,099s
+real	5,099s

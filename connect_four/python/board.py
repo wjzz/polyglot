@@ -30,19 +30,9 @@ class Board:
         self._current = current
         self._last = last
 
-        h = 1
-        for col in self._cols:
-            for piece in col:
-                h <<= 2
-                if piece == Piece.X:
-                    h |= 0b01
-                else:
-                    h |= 0b10
-            h <<= 2 * (Config.ROWS - len(col))
-
         if prev_hash != None:
             assert(current != None and last != None)
-            bits_to_move = 2 * (Config.ROWS * (Config.COLS - last - 1) + (Config.ROWS - len(cols[last])))
+            bits_to_move = 2 * (Config.ROWS * (Config.COLS - last) - len(cols[last]))
             if current.opposite == Piece.X:
                 last_piece = 0b01
             else:
@@ -50,14 +40,23 @@ class Board:
             mask = last_piece << bits_to_move
 
             new_hash = prev_hash | mask
-            if (h != new_hash):
-                # print()
-                print(f"\nnew mask = [{mask:52b}] bits_to_move = {bits_to_move} last = {last}")
-                print(f"old hash = [{h:52b}]")
-                print(f"new hash = [{new_hash:52b}]")
-            assert (h == new_hash)
-
-        self._myhash = h
+            # if (h != new_hash):
+            #     # print()
+            #     print(f"\nnew mask = [{mask:52b}] bits_to_move = {bits_to_move} last = {last}")
+            #     print(f"old hash = [{h:52b}]")
+            #     print(f"new hash = [{new_hash:52b}]")
+            self._myhash = new_hash
+        else:
+            h = 1
+            for col in self._cols:
+                for piece in col:
+                    h <<= 2
+                    if piece == Piece.X:
+                        h |= 0b01
+                    else:
+                        h |= 0b10
+                h <<= 2 * (Config.ROWS - len(col))
+            self._myhash = h
 
     def __eq__(self, other):
         return ((self._current, self._last, self._cols) 

@@ -57,4 +57,5 @@ Solving 5x5 (with pypy3)
 a) directly ???
 b) memo: [23m] - with memo with a cutoff at 20 [21 leads to memory error]
     Total visited nodes = 668,607,278
-c) with alphabeta 
+c) with alphabeta [43m] 
+    Total visited nodes = 2,135,732,339

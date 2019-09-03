@@ -23,7 +23,8 @@ class Stats:
 #-------------------------------------------------------
 
 TOTAL44 = 131060741
-TOTAL55 = 289156574
+TOTAL55_21 = 289156574
+TOTAL55_20 = 668607278
 
 def solve_game(board, depth):
     """
@@ -94,7 +95,7 @@ def solve_game_memo(board, depth, memo, moves_made):
             Stats.end = time()
             time_diff = Stats.end - Stats.start
             amount, suffix = humanize_time(time_diff)
-            percentage = (100 * Stats.total) / TOTAL55
+            percentage = (100 * Stats.total) / TOTAL55_20
             print(f"visited {Stats.total // 1000}k nodes [{percentage:.2f}%]"
                 f" in {amount:.2f}{suffix}"
             )
@@ -250,5 +251,5 @@ if __name__ == "__main__":
     Config.ROWS = 5
 
     print(f"Current size [COLS x ROWS]: {Config.COLS} x {Config.ROWS}")
-    search_all_main(end = 13)
-    #solve_game_main()
+    #search_all_main(end = 16)
+    solve_game_main()

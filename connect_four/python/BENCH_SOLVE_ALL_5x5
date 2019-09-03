@@ -68,12 +68,3 @@ Depth 22:   102,594,497 states in 4.97m [19%] 7,240,077 / 36,274,661 [memo size:
 Depth 23:   161,791,599 states in 6.28m [24%] 14,630,466 / 59,197,102 [memo size: 47,168,917]
 Depth 24:   233,069,697 states in 8.19m [21%] 15,191,221 / 71,278,098 [memo size: 47,168,917]
 Depth 25:   289,156,574 states in 9.64m [100%] 56,086,877 / 56,086,877 [memo size: 47,168,917]
-
-# Third version - alpha beta prunning
-
-time pypy3 solve45.py 
-Current size [COLS x ROWS]: 5 x 5
-Game solved. Result = 0
-Total visited nodes = 2,135,732,339
-
-real	43m16,336s
