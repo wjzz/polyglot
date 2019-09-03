@@ -1,4 +1,4 @@
-from board import Board, Piece, Config
+from board import Board, Config
 from utils import humanize_time, humanize_bytes
 from time import time
 import sys
@@ -190,6 +190,56 @@ def search_all_memo_top(board, depth):
     return len(memo)
 
 #-------------------------------------------------------
+#  SOLVING THE WHOLE GAME TREE WITH ALPHA-BETA PRUNNING
+#-------------------------------------------------------
+
+def solve_game_alphabeta(board, depth, alpha, beta):
+    # this will never be -1, because we don't go that far
+    evaluation = board.evaluate
+    Stats.total += 1
+        
+    if evaluation is not None:
+        if evaluation == 1:
+            # this means we have just lost
+            return -1
+        else:
+            return 0
+    if depth == 0:
+        raise RecursionError
+    
+    value = -1
+    for move in board.legal_moves:
+        value = max(value, -solve_game_alphabeta(
+            board.apply_move(move), depth - 1, -beta, -alpha))
+        alpha = max(alpha, value)
+        if alpha >= beta:
+            break
+    return value
+
+def solve_game_alphabeta_top(board, depth = Config.ROWS * Config.COLS):
+    """
+    Calculates the theorical result of the game using alpha-beta prunning.
+    """
+    return solve_game_alphabeta(board, depth, -100, 100)
+
+# function negamax(node, depth, α, β, color) is
+#     if depth = 0 or node is a terminal node then
+#         return color × the heuristic value of node
+
+#     childNodes := generateMoves(node)
+#     childNodes := orderMoves(childNodes)
+#     value := −∞
+#     foreach child in childNodes do
+#         value := max(value, −negamax(child, depth − 1, −β, −α, −color))
+#         α := max(α, value)
+#         if α ≥ β then
+#             break (* cut-off *)
+#     return value
+
+# (* Initial call for Player A's root node *)
+# negamax(rootNode, depth, −∞, +∞, 1)
+
+#-------------------------------------------------------
 # DRIVERS FOR RUNNING THE SEARCHES AND COLLECTING STATS
 #-------------------------------------------------------
 
@@ -229,7 +279,7 @@ def search_all_main(start = 0, end = Config.COLS * Config.ROWS):
 
         print(f"\rDepth {depth:2}: {Stats.total:13,} "
             f"states in {elapsed:2.2f}{suffix} "
-            f"[{percentage}%] {Stats.finished:,} / {Stats.terminal:,} "
+            f"[{perce1ntage}%] {Stats.finished:,} / {Stats.terminal:,} "
             f"[memo size: {memo_size:,}]"
             )
 
@@ -251,5 +301,5 @@ if __name__ == "__main__":
     Config.ROWS = 5
 
     print(f"Current size [COLS x ROWS]: {Config.COLS} x {Config.ROWS}")
-    #search_all_main(end = 16)
-    solve_game_main()
+    search_all_main(end = 13)
+    #solve_game_main()

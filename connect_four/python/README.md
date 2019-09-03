@@ -18,7 +18,7 @@ Todo next
 
 * Implement a evaluation function
 * Implement a computer player
-* Implement Minimax
+* Implement Alpha-beta with transposition tables
 * Implement a GUI in React and a Flask API in Python
 
 Lessons and ideas
@@ -28,6 +28,7 @@ Lessons and ideas
 * Unlimited memo even for 5x5 can easily take more than 4Gb of RAM. One needs to make a cut-off
 * pypy3 uses more RAM than cpython
 * pypy3 seems to be around 4x faster than cpython
+* inlining the enum type (into a bool or int) doesn't help performance
 
 Results
 =======
@@ -55,7 +56,7 @@ c) with alphabeta [33s]
 
 Solving 5x5 (with pypy3)
 a) directly ???
-b) memo: [23m] - with memo with a cutoff at 20 [21 leads to memory error]
+b) memo: [18m] - with memo with a cutoff at 20 [21 leads to memory error]
     Total visited nodes = 668,607,278
 c) with alphabeta [43m] 
     Total visited nodes = 2,135,732,339
