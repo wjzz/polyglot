@@ -1,0 +1,79 @@
+# First version - memo everything
+
+$ ulimit -Sv 4000000
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 5 x 5
+Max depth = 25
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             6 states in 0.00s [0%] 0 / 5 [memo size: 6]
+Depth  2:            31 states in 0.00s [0%] 0 / 25 [memo size: 31]
+Depth  3:           126 states in 0.01s [0%] 0 / 95 [memo size: 126]
+Depth  4:           471 states in 0.07s [0%] 0 / 345 [memo size: 471]
+Depth  5:         1,546 states in 0.19s [0%] 0 / 1,075 [memo size: 1,546]
+Depth  6:         4,896 states in 0.27s [0%] 0 / 3,350 [memo size: 4,896]
+Depth  7:        14,251 states in 0.49s [1%] 170 / 9,355 [memo size: 14,251]
+Depth  8:        39,311 states in 0.65s [1%] 313 / 25,060 [memo size: 39,311]
+Depth  9:       100,153 states in 0.95s [4%] 2,732 / 60,842 [memo size: 100,153]
+Depth 10:       239,785 states in 1.60s [3%] 4,242 / 139,632 [memo size: 239,785]
+Depth 11:       539,549 states in 3.18s [7%] 22,726 / 299,764 [memo size: 539,549]
+Depth 12:     1,135,685 states in 5.76s [5%] 33,269 / 596,136 [memo size: 1,135,685]
+Depth 13:     2,264,093 states in 11.45s [11%] 129,115 / 1,128,408 [memo size: 2,264,093]
+Depth 14:     4,213,049 states in 20.29s [9%] 178,920 / 1,948,956 [memo size: 4,213,049]
+Depth 15:     7,444,390 states in 35.81s [16%] 525,292 / 3,231,341 [memo size: 7,444,390]
+Depth 16:    12,214,227 states in 1.02m [13%] 662,581 / 4,769,837 [memo size: 12,214,227]
+Depth 17:    19,004,117 states in 1.51m [22%] 1,499,382 / 6,789,890 [memo size: 19,004,117]
+Depth 18:    27,400,462 states in 2.31m [19%] 1,663,184 / 8,396,345 [memo size: 27,400,462]           (around 1gb of RAM here)
+Depth 19:    37,355,992 states in 3.13m [28%] 2,869,894 / 9,955,530 [memo size: 37,355,992]
+Depth 20:    47,168,917 states in 3.95m [26%] 2,638,942 / 9,812,925 [memo size: 47,168,917]
+Depth 21:    56,189,460 states in 4.69m [36%] 3,287,701 / 9,020,543 [memo size: 56,189,460]           (around 3gb of RAM here)
+Depth 22:    62,821,940 states in 4.17m [34%] 2,297,723 / 6,632,480 [memo size: 62,821,940]
+Depth 23:    67,167,853 states in 4.55m [42%] 1,860,811 / 4,345,913 [memo size: 67,167,853]           (around 3.5gb)
+Current depth: 24 estimated time: 4.97m
+Memory error
+
+# Second version - memo with a cutoff = 15
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 5 x 5
+Max depth = 25
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             6 states in 0.00s [0%] 0 / 5 [memo size: 6]
+Depth  2:            31 states in 0.00s [0%] 0 / 25 [memo size: 31]
+Depth  3:           126 states in 0.00s [0%] 0 / 95 [memo size: 126]
+Depth  4:           471 states in 0.05s [0%] 0 / 345 [memo size: 471]
+Depth  5:         1,546 states in 0.14s [0%] 0 / 1,075 [memo size: 1,546]
+Depth  6:         4,896 states in 0.21s [0%] 0 / 3,350 [memo size: 4,896]
+Depth  7:        14,251 states in 0.39s [1%] 170 / 9,355 [memo size: 14,251]
+Depth  8:        39,311 states in 0.49s [1%] 313 / 25,060 [memo size: 39,311]
+Depth  9:       100,153 states in 0.71s [4%] 2,732 / 60,842 [memo size: 100,153]
+Depth 10:       239,785 states in 1.21s [3%] 4,242 / 139,632 [memo size: 239,785]
+Depth 11:       539,549 states in 2.29s [7%] 22,726 / 299,764 [memo size: 539,549]
+Depth 12:     1,135,685 states in 4.16s [5%] 33,269 / 596,136 [memo size: 1,135,685]
+Depth 13:     2,264,093 states in 8.55s [11%] 129,115 / 1,128,408 [memo size: 2,264,093]
+Depth 14:     4,213,049 states in 15.59s [9%] 178,920 / 1,948,956 [memo size: 4,213,049]
+Depth 15:    11,395,875 states in 29.89s [8%] 637,276 / 7,182,826 [memo size: 4,213,049]
+Depth 16:    37,000,251 states in 1.30m [7%] 2,033,556 / 25,604,376 [memo size: 4,213,049]
+Depth 17:   125,402,329 states in 3.71m [11%] 10,554,548 / 88,402,078 [memo size: 4,213,049]
+
+# Second version - memo with a cutoff = 21
+
+wjzz:~/prog/polyglot/connect_four/python$ pypy3 solve.py 
+Current size [COLS x ROWS]: 5 x 5
+Max depth = 25
+Depth 19:    37,355,992 states in 2.64m [28%] 2,869,894 / 9,955,530 [memo size: 37,355,992]
+Depth 20:    47,168,917 states in 3.23m [26%] 2,638,942 / 9,812,925 [memo size: 47,168,917]
+Depth 21:    66,319,836 states in 3.81m [20%] 3,899,336 / 19,150,919 [memo size: 47,168,917]
+Depth 22:   102,594,497 states in 4.97m [19%] 7,240,077 / 36,274,661 [memo size: 47,168,917]
+Depth 23:   161,791,599 states in 6.28m [24%] 14,630,466 / 59,197,102 [memo size: 47,168,917]
+Depth 24:   233,069,697 states in 8.19m [21%] 15,191,221 / 71,278,098 [memo size: 47,168,917]
+Depth 25:   289,156,574 states in 9.64m [100%] 56,086,877 / 56,086,877 [memo size: 47,168,917]
+
+# Third version - alpha beta prunning
+
+time pypy3 solve45.py 
+Current size [COLS x ROWS]: 5 x 5
+Game solved. Result = 0
+Total visited nodes = 2,135,732,339
+
+real	43m16,336s

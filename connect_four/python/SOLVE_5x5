@@ -1,0 +1,11 @@
+[1 = first player wins, -1 = second player wins, 0 = draw]
+
+# Second version - simple memoization
+
+CUTOFF at 21 leads to memory error at the very end...
+
+CUTOFF at 20:
+
+Game solved. Result = 0
+Total visited nodes = 668,607,278
+Time = 23m

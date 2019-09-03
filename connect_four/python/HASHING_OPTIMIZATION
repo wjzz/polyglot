@@ -1,0 +1,19 @@
+# v0 - simple hashing as a string (recalculated every time)
+
+pypy3 solve.py 
+Current size [COLS x ROWS]: 5 x 5
+Depth 13:     2,264,093 states in 16.69s [11%] 129,115 / 1,128,408 [memo size: 2,264,093]
+
+# v1 - simple hashing as a int (recalculated every time)
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 5 x 5
+Depth 13:     2,264,093 states in 7.76s [11%] 129,115 / 1,128,408 [memo size: 2,264,093]
+
+# v2 - calculate hash in the constructor
+#      this doesn't change the speed, but allows for optimizations (calculting new hash based on the previous one)
+
+Current size [COLS x ROWS]: 5 x 5
+Depth 13:     2,264,093 states in 7.79s [11%] 129,115 / 1,128,408 [memo size: 2,264,093]
+
+

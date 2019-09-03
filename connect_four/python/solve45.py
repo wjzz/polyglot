@@ -23,6 +23,7 @@ class Stats:
 #-------------------------------------------------------
 
 TOTAL44 = 131060741
+TOTAL45 = 1706255
 TOTAL55 = 289156574
 
 def solve_game(board, depth):
@@ -36,14 +37,14 @@ def solve_game(board, depth):
     """
 
     Stats.total += 1
-    # if Stats.total % 1000000 == 0:
-    #     Stats.end = time()
-    #     time_diff = Stats.end - Stats.start
-    #     amount, suffix = humanize_time(time_diff)
-    #     percentage = (100 * Stats.total) / TOTAL
-    #     print(f"visited {Stats.total // 1000000}M nodes [{percentage:.2f}%]"
-    #           f" in {amount:.2f}{suffix}"
-    #     )
+    if Stats.total % 1000000 == 0:
+        Stats.end = time()
+        time_diff = Stats.end - Stats.start
+        amount, suffix = humanize_time(time_diff)
+        percentage = (100 * Stats.total) / TOTAL45
+        print(f"visited {Stats.total // 1000000}M nodes [{percentage:.2f}%]"
+              f" in {amount:.2f}{suffix}"
+        )
 
     # this will never be -1, because we don't go that far
     evaluation = board.evaluate
@@ -86,7 +87,7 @@ def solve_game_memo(board, depth, memo, moves_made):
 
     h = board.myhash
 
-    CUT_OFF = 20
+    CUT_OFF = 21
 
     if h not in memo:
         Stats.total += 1
@@ -129,6 +130,57 @@ def solve_game_memo_top(board, depth = Config.COLS * Config.ROWS):
     Stats.start = time()
     memo = {}
     return solve_game_memo(board, depth, memo, moves_made=0)
+
+#-------------------------------------------------------
+#  SOLVING THE WHOLE GAME TREE WITH ALPHA-BETA PRUNNING
+#-------------------------------------------------------
+
+def solve_game_alphabeta(board, depth, alpha, beta):
+    # this will never be -1, because we don't go that far
+    evaluation = board.evaluate
+    Stats.total += 1
+        
+    if evaluation is not None:
+        if evaluation == 1:
+            # this means we have just lost
+            return -1
+        else:
+            return 0
+    if depth == 0:
+        raise RecursionError
+    
+    value = -1
+    for move in board.legal_moves:
+        value = max(value, -solve_game_alphabeta(
+            board.apply_move(move), depth - 1, -beta, -alpha))
+        alpha = max(alpha, value)
+        if alpha >= beta:
+            break
+    return value
+
+def solve_game_alphabeta_top(board, depth = Config.ROWS * Config.COLS):
+    """
+    Calculates the theorical result of the game using alpha-beta prunning.
+    """
+    return solve_game_alphabeta(board, depth, -100, 100)
+
+# function negamax(node, depth, α, β, color) is
+#     if depth = 0 or node is a terminal node then
+#         return color × the heuristic value of node
+
+#     childNodes := generateMoves(node)
+#     childNodes := orderMoves(childNodes)
+#     value := −∞
+#     foreach child in childNodes do
+#         value := max(value, −negamax(child, depth − 1, −β, −α, −color))
+#         α := max(α, value)
+#         if α ≥ β then
+#             break (* cut-off *)
+#     return value
+
+# (* Initial call for Player A's root node *)
+# negamax(rootNode, depth, −∞, +∞, 1)
+
 
 #-------------------------------------------------------
 #           SEARCHING THE WHOLE GAME TREE
@@ -206,10 +258,11 @@ def print_time_estimate(depth, times):
             flush=True, 
             end="")
 
-def search_all_main(start = 0, end = Config.COLS * Config.ROWS):
+def search_all_main(start = 0):
     prev_times = []
-    print(f"Max depth = {end}")
-    for depth in range(start, end + 1):
+    MAX_DEPTH = Config.COLS * Config.ROWS
+    print(f"Max depth = {MAX_DEPTH}")
+    for depth in range(start, MAX_DEPTH + 1):
         Stats.reset()
         print_time_estimate(depth, prev_times)
         start = time()
@@ -234,7 +287,7 @@ def search_all_main(start = 0, end = Config.COLS * Config.ROWS):
 
 def solve_game_main():
     try:
-        result = solve_game_memo_top(Board(), Config.COLS * Config.ROWS)
+        result = solve_game_alphabeta_top(Board(), Config.COLS * Config.ROWS)
     except RecursionError:
         result = "Not deep enough"
     print(f"Game solved. Result = {result}")
@@ -250,5 +303,5 @@ if __name__ == "__main__":
     Config.ROWS = 5
 
     print(f"Current size [COLS x ROWS]: {Config.COLS} x {Config.ROWS}")
-    search_all_main(end = 13)
-    #solve_game_main()
+    # search_all_main()
+    solve_game_main()

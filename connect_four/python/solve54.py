@@ -206,10 +206,11 @@ def print_time_estimate(depth, times):
             flush=True, 
             end="")
 
-def search_all_main(start = 0, end = Config.COLS * Config.ROWS):
+def search_all_main(start = 0):
     prev_times = []
-    print(f"Max depth = {end}")
-    for depth in range(start, end + 1):
+    MAX_DEPTH = Config.COLS * Config.ROWS
+    print(f"Max depth = {MAX_DEPTH}")
+    for depth in range(start, MAX_DEPTH + 1):
         Stats.reset()
         print_time_estimate(depth, prev_times)
         start = time()
@@ -247,8 +248,9 @@ def solve_game_main():
 
 if __name__ == "__main__":
     Config.COLS = 5
-    Config.ROWS = 5
+    Config.ROWS = 4
 
     print(f"Current size [COLS x ROWS]: {Config.COLS} x {Config.ROWS}")
-    search_all_main(end = 13)
-    #solve_game_main()
+    #search_all_main(19)
+    solve_game_main()
+    

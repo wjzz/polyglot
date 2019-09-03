@@ -22,13 +22,42 @@ class Config:
     COLS = 7
 
 class Board:
-    def __init__(self, cols = None, current = Piece.X, last = None):
+    def __init__(self, cols = None, current = Piece.X, last = None, prev_hash = None):
         if not cols:
             cols = [ [] for _ in range(Config.COLS) ]
 
         self._cols = cols
         self._current = current
         self._last = last
+
+        h = 1
+        for col in self._cols:
+            for piece in col:
+                h <<= 2
+                if piece == Piece.X:
+                    h |= 0b01
+                else:
+                    h |= 0b10
+            h <<= 2 * (Config.ROWS - len(col))
+
+        if prev_hash != None:
+            assert(current != None and last != None)
+            bits_to_move = 2 * (Config.ROWS * (Config.COLS - last - 1) + (Config.ROWS - len(cols[last])))
+            if current.opposite == Piece.X:
+                last_piece = 0b01
+            else:
+                last_piece = 0b10
+            mask = last_piece << bits_to_move
+
+            new_hash = prev_hash | mask
+            if (h != new_hash):
+                # print()
+                print(f"\nnew mask = [{mask:52b}] bits_to_move = {bits_to_move} last = {last}")
+                print(f"old hash = [{h:52b}]")
+                print(f"new hash = [{new_hash:52b}]")
+            assert (h == new_hash)
+
+        self._myhash = h
 
     def __eq__(self, other):
         return ((self._current, self._last, self._cols) 
@@ -51,16 +80,18 @@ class Board:
     # NOTE: this is more like a full encoding that merely a hash
     @property
     def myhash(self):
-        h = 1
-        for col in self._cols:
-            for piece in col:
-                h <<= 2
-                if piece == Piece.X:
-                    h |= 0b01
-                else:
-                    h |= 0b10
-            h <<= 2 * (Config.ROWS - len(col))
-        return h
+        return self._myhash
+
+        # h = 1
+        # for col in self._cols:
+        #     for piece in col:
+        #         h <<= 2
+        #         if piece == Piece.X:
+        #             h |= 0b01
+        #         else:
+        #             h |= 0b10
+        #     h <<= 2 * (Config.ROWS - len(col))
+        # return h
         
     @property
     def str_hash(self):
@@ -106,8 +137,8 @@ class Board:
         assert (len(self._cols[move]) < Config.ROWS)
         cols = [ col.copy() for col in self._cols ]
         cols[move].append(self._current)
-        return Board(cols, self._current.opposite, last = move)
-    
+        return Board(cols, self._current.opposite, last = move, prev_hash = self.myhash)
+     
     @property
     def is_win(self):
         # TODO: optimization
@@ -149,6 +180,22 @@ class Board:
     @property
     def is_finished(self):
         return self.is_win or self.is_draw
+
+    @property
+    def evaluate(self):
+        """
+        Evaluates the current position.
+        
+        Returns:
+            1 - game has just been won
+            0 - the game is a draw
+            None - the game is not yet finished
+        """
+        if self.is_win:
+            return 1
+        if self.is_draw:
+            return 0
+        return None
 
 def random_game_length():
     board = Board()

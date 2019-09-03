@@ -1,0 +1,17 @@
+[1 = first player wins, -1 = second player wins, 0 = draw]
+
+# With memoization 
+
+Current size [COLS x ROWS]: 4 x 5
+Starting search at depth = 20
+Game solved. Result = 0
+Total visited nodes = 1,745,379
+
+real	0m7,883s
+
+# Alpha-beta prunning
+
+Game solved. Result = 0
+Total visited nodes = 1,227,610
+
+real	0m5,099s

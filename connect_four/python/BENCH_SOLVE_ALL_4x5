@@ -1,0 +1,27 @@
+# Second version - simple memoizations
+
+time pypy3 solve45.py 
+Current size [COLS x ROWS]: 4 x 5
+Max depth = 20
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 1]
+Depth  1:             5 states in 0.00s [0%] 0 / 4 [memo size: 5]
+Depth  2:            21 states in 0.00s [0%] 0 / 16 [memo size: 21]
+Depth  3:            73 states in 0.00s [0%] 0 / 52 [memo size: 73]
+Depth  4:           233 states in 0.02s [0%] 0 / 160 [memo size: 233]
+Depth  5:           673 states in 0.07s [0%] 0 / 440 [memo size: 673]
+Depth  6:         1,873 states in 0.15s [0%] 0 / 1,200 [memo size: 1,873]
+Depth  7:         4,865 states in 0.21s [2%] 60 / 2,992 [memo size: 4,865]
+Depth  8:        11,833 states in 0.35s [1%] 84 / 6,968 [memo size: 11,833]
+Depth  9:        26,725 states in 0.50s [4%] 712 / 14,892 [memo size: 26,725]
+Depth 10:        56,057 states in 0.63s [2%] 832 / 29,332 [memo size: 56,057]
+Depth 11:       110,361 states in 0.97s [8%] 4,382 / 54,304 [memo size: 110,361]
+Depth 12:       199,963 states in 1.38s [5%] 4,944 / 89,602 [memo size: 199,963]
+Depth 13:       341,843 states in 1.66s [12%] 18,058 / 141,880 [memo size: 341,843]
+Depth 14:       536,641 states in 2.20s [10%] 20,044 / 194,798 [memo size: 536,641]
+Depth 15:       788,825 states in 3.06s [19%] 48,048 / 252,184 [memo size: 788,825]
+Depth 16:     1,056,319 states in 3.88s [17%] 45,660 / 267,494 [memo size: 1,056,319]
+Depth 17:     1,319,949 states in 5.18s [26%] 70,852 / 263,630 [memo size: 1,319,949]
+Depth 18:     1,524,321 states in 5.84s [24%] 50,724 / 204,372 [memo size: 1,524,321]
+Depth 19:     1,656,859 states in 6.15s [33%] 44,018 / 132,538 [memo size: 1,656,859]
+Depth 20:     1,706,255 states in 6.10s [100%] 49,396 / 49,396 [memo size: 1,706,255]
+

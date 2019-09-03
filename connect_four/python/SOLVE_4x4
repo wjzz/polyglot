@@ -1,0 +1,23 @@
+[1 = first player wins, -1 = second player wins, 0 = draw]
+
+# First version - we visit all nodes
+
+$ pypy3 solve.py
+visited 131M nodes [99.95%] in 4.01m
+Game solved. Result = 0
+
+# Second version - simple memoization
+
+$ pypy3 solve.py
+Current size [COLS x ROWS]: 4 x 4
+Game solved. Result = 0
+Total visited nodes = 161,029
+real    0m3,833s
+
+# Third version - alpha beta prunning
+
+$ pypy3 solve45.py 
+Current size [COLS x ROWS]: 4 x 4
+Game solved. Result = 0
+Total visited nodes = 62,889
+real	0m1,611s
