@@ -20,3 +20,5 @@ Depth 13:     2,264,093 states in 7.79s [11%] 129,115 / 1,128,408 [memo size: 2,
 
 Current size [COLS x ROWS]: 5 x 5
 Depth 13:     2,264,093 states in 4.55s [11%] 129,115 / 1,128,408 [memo size: 2,264,093]
+
+# v4 - another idea = precalculate all possible masks (like in zobrist hashing)
