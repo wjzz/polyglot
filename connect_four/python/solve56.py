@@ -87,7 +87,7 @@ def solve_game_memo(board, depth, memo, moves_made):
 
     h = board.myhash
 
-    SOLVE_CUT_OFF = 18
+    CUT_OFF = 20
 
     if h not in memo:
         Stats.total += 1
@@ -95,9 +95,9 @@ def solve_game_memo(board, depth, memo, moves_made):
             Stats.end = time()
             time_diff = Stats.end - Stats.start
             amount, suffix = humanize_time(time_diff)
-            #percentage = (100 * Stats.total) / TOTAL55_20
-            print(f"visited {Stats.total // 1000}k nodes" # [{percentage:.2f}%]"
-                f" in {amount:.2f}{suffix} [{len(memo):,}]"
+            percentage = (100 * Stats.total) / TOTAL55_20
+            print(f"visited {Stats.total // 1000}k nodes [{percentage:.2f}%]"
+                f" in {amount:.2f}{suffix}"
             )
 
         # this will never be -1, because we don't go that far
@@ -116,7 +116,7 @@ def solve_game_memo(board, depth, memo, moves_made):
             # our best result is the worst result of the opponent
             result =  -1 * min([solve_game_memo(board.apply_move(move), depth-1, memo, moves_made+1) 
                             for move in board.legal_moves])
-        if moves_made < SOLVE_CUT_OFF:
+        if moves_made < CUT_OFF:
             memo[h] = result
         else:
             return result
@@ -166,7 +166,7 @@ def search_all_memo(board, depth, memo, moves_made):
     Note that we don't have to store the depth in the memo, since
     """
     # h = board.str_hash
-    CUT_OFF = 19
+    CUT_OFF = 21
     h = board.myhash
     if h not in memo:
         Stats.total += 1
@@ -265,8 +265,8 @@ def search_all_main(start = 0, end = Config.COLS * Config.ROWS):
         print_time_estimate(depth, prev_times)
         start = time()
         memo_size = 0
-        #search_all(Board(), depth)
-        memo_size = search_all_memo_top(Board(), depth)
+        search_all(Board(), depth)
+        # memo_size = search_all_memo_top(Board(), depth)
         end = time()
         time_diff = end - start
         prev_times.append(time_diff)
@@ -296,16 +296,10 @@ def solve_game_main():
 #                  THE STARTING POINT
 #-------------------------------------------------------
 
-def main():
+if __name__ == "__main__":
     Config.COLS = 5
     Config.ROWS = 6
-    Config.SIZE = 16
 
     print(f"Current size [COLS x ROWS]: {Config.COLS} x {Config.ROWS}")
     search_all_main(end = Config.COLS * Config.ROWS)
     #solve_game_main()
-    #solve_game_memo_top(Board(), Config.SIZE)
-
-
-if __name__ == "__main__":
-    main()

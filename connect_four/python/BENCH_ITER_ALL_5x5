@@ -1,4 +1,4 @@
-# First version - memo everything
+# v1 - memo everything
 
 $ ulimit -Sv 4000000
 
@@ -32,7 +32,7 @@ Depth 23:    67,167,853 states in 4.55m [42%] 1,860,811 / 4,345,913 [memo size: 
 Current depth: 24 estimated time: 4.97m
 Memory error
 
-# Second version - memo with a cutoff = 15
+# v2 - memo with a cutoff = 15
 
 $ pypy3 solve.py 
 Current size [COLS x ROWS]: 5 x 5
@@ -56,7 +56,7 @@ Depth 15:    11,395,875 states in 29.89s [8%] 637,276 / 7,182,826 [memo size: 4,
 Depth 16:    37,000,251 states in 1.30m [7%] 2,033,556 / 25,604,376 [memo size: 4,213,049]
 Depth 17:   125,402,329 states in 3.71m [11%] 10,554,548 / 88,402,078 [memo size: 4,213,049]
 
-# Second version - memo with a cutoff = 21
+# v2.1 - memo with a cutoff = 21
 
 wjzz:~/prog/polyglot/connect_four/python$ pypy3 solve.py 
 Current size [COLS x ROWS]: 5 x 5

@@ -1,0 +1,68 @@
+$ p profiling.py 
+Current size [COLS x ROWS]: 4 x 4
+Starting search at depth = 16
+         10872916 function calls (10434054 primitive calls) in 5.551 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  cumtime  percall filename:lineno(function)
+   273914    0.176    0.542    0.000 board.py:130(legal_moves)
+   273914    0.287    0.366    0.000 board.py:132(<listcomp>)
+   304574    0.690    1.992    0.000 board.py:135(apply_move)
+   304574    0.252    0.401    0.000 board.py:137(<listcomp>)
+   161029    0.161    1.776    0.000 board.py:141(is_win)
+   596511    0.386    1.615    0.000 board.py:152(_check_line)
+  1193022    1.073    1.229    0.000 board.py:157(_check_straight_line)
+   139625    0.063    0.353    0.000 board.py:173(is_draw)
+   161029    0.111    2.240    0.000 board.py:183(evaluate)
+   304575    0.431    0.614    0.000 board.py:25(__init__)
+        1    0.000    0.000    0.000 board.py:27(<listcomp>)
+   609148    0.326    0.326    0.000 board.py:8(opposite)
+   609149    0.093    0.093    0.000 board.py:80(myhash)
+ 134289/1    0.372    5.548    5.548 solve.py:117(<listcomp>)
+        1    0.000    5.548    5.548 solve.py:125(solve_game_memo_top)
+        1    0.002    5.551    5.551 solve.py:299(main)
+ 304575/1    0.600    5.548    5.548 solve.py:78(solve_game_memo)
+  3845822    0.283    0.283    0.000 {built-in method builtins.len}
+   134289    0.047    0.047    0.000 {built-in method builtins.min}
+        2    0.000    0.000    0.000 {built-in method builtins.print}
+        1    0.000    0.000    0.000 {built-in method time.time}
+   304574    0.047    0.047    0.000 {method 'append' of 'list' objects}
+  1218296    0.149    0.149    0.000 {method 'copy' of 'list' objects}
+        1    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+$ pypy3 profiling.py 
+Current size [COLS x ROWS]: 4 x 4
+Starting search at depth = 16
+         10872976 function calls (10434114 primitive calls) in 2.127 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  cumtime  percall filename:lineno(function)
+       27    0.000    0.000    0.000 <frozen importlib._bootstrap>:190(cb)
+   273914    0.022    0.245    0.000 board.py:130(legal_moves)
+   273914    0.192    0.222    0.000 board.py:132(<listcomp>)
+   304574    0.218    0.528    0.000 board.py:135(apply_move)
+   304574    0.155    0.206    0.000 board.py:137(<listcomp>)
+   161029    0.076    0.858    0.000 board.py:141(is_win)
+   596511    0.340    0.781    0.000 board.py:152(_check_line)
+  1193022    0.379    0.441    0.000 board.py:157(_check_straight_line)
+   139625    0.010    0.135    0.000 board.py:173(is_draw)
+   161029    0.084    1.076    0.000 board.py:183(evaluate)
+   304575    0.038    0.054    0.000 board.py:25(__init__)
+        1    0.000    0.000    0.000 board.py:27(<listcomp>)
+   609148    0.030    0.030    0.000 board.py:8(opposite)
+   609149    0.012    0.012    0.000 board.py:80(myhash)
+ 134289/1    0.201    2.127    2.127 solve.py:117(<listcomp>)
+        1    0.000    2.127    2.127 solve.py:125(solve_game_memo_top)
+        1    0.000    2.127    2.127 solve.py:299(main)
+ 304575/1    0.175    2.127    2.127 solve.py:78(solve_game_memo)
+        4    0.000    0.000    0.000 utf_8.py:19(encode)
+        4    0.000    0.000    0.000 {built-in function _codecs.utf_8_encode}
+  3845822    0.106    0.106    0.000 {built-in function len}
+   134289    0.022    0.022    0.000 {built-in function min}
+        1    0.000    0.000    0.000 {built-in function time.time}
+   304574    0.014    0.014    0.000 {method 'append' of 'list' objects}
+  1218296    0.051    0.051    0.000 {method 'copy' of 'list' objects}
+        1    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+       27    0.000    0.000    0.000 {method 'get' of 'dict' objects}

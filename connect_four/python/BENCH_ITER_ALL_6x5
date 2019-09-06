@@ -1,0 +1,18 @@
+# v1 - no implizations
+
+$ pypy3 solve.py 
+Current size [COLS x ROWS]: 6 x 5
+Max depth = 30
+Depth  0:             1 states in 0.00s [0%] 0 / 1 [memo size: 0]
+Depth  1:             7 states in 0.00s [0%] 0 / 6 [memo size: 0]
+Depth  2:            43 states in 0.00s [0%] 0 / 36 [memo size: 0]
+Depth  3:           259 states in 0.01s [0%] 0 / 216 [memo size: 0]
+Depth  4:         1,555 states in 0.11s [0%] 0 / 1,296 [memo size: 0]
+Depth  5:         9,331 states in 0.32s [0%] 0 / 7,776 [memo size: 0]
+Depth  6:        55,981 states in 0.56s [0%] 0 / 46,650 [memo size: 0]
+Depth  7:       335,701 states in 1.05s [1%] 5,070 / 279,720 [memo size: 0]
+Depth  8:     1,980,451 states in 3.03s [0%] 12,750 / 1,644,750 [memo size: 0]
+Depth  9:    11,731,951 states in 14.90s [2%] 283,416 / 9,751,500 [memo size: 0]
+Depth 10:    68,091,475 states in 1.35m [1%] 911,304 / 56,359,524 [memo size: 0]
+Depth 11:   396,431,059 states in 7.75m [3%] 12,711,940 / 328,339,584 [memo size: 0]
+Current depth: 12 estimated time: 44.61m
