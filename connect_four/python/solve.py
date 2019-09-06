@@ -71,7 +71,7 @@ def solve_game_top(board, depth = Config.COLS * Config.ROWS):
     Stats.start = time()
     return solve_game(board, depth)
 
-#-------------------------------------------------------
+#--------------------------------------------------------
 #      SOLVING THE WHOLE GAME TREE WITH MEMOIZATION
 #-------------------------------------------------------
 
@@ -162,6 +162,7 @@ def solve_game_alphabeta_top(board, depth = Config.ROWS * Config.COLS):
     """
     Calculates the theorical result of the game using alpha-beta prunning.
     """
+    Stats.start = time()
     return solve_game_alphabeta(board, depth, -100, 100)
 
 # function negamax(node, depth, α, β, color) is
@@ -182,7 +183,314 @@ def solve_game_alphabeta_top(board, depth = Config.ROWS * Config.COLS):
 # negamax(rootNode, depth, −∞, +∞, 1)
 
 #-------------------------------------------------------
+#  SOLVING THE WHOLE GAME TREE WITH QUICK JUMPS
+#-------------------------------------------------------
+
+def solve_game_quick_jump(board, depth):
+    """
+    Computes the theoretical result of the current position.
+    
+    The return value is:
+         1 when the current player wins
+         0 when the game ends in a draw with optimal play
+        -1 when the other player wins
+    """
+
+    Stats.total += 1
+    if Stats.total % 500000 == 0:
+        Stats.end = time()
+        time_diff = Stats.end - Stats.start
+        amount, suffix = humanize_time(time_diff)
+        percentage = (100 * Stats.total) / TOTAL44
+        print(f"visited {Stats.total // 1000000}M nodes [{percentage:.2f}%]"
+              f" in {amount:.2f}{suffix}"
+        )
+
+    # this will never be -1, because we don't go that far
+    evaluation = board.evaluate
+
+    if evaluation is not None:
+        if evaluation == 1:
+            # this means we have just lost
+            return -1
+        else:
+            return 0
+    if depth == 0:
+        raise RecursionError
+        
+    result = -1
+    for move in board.legal_moves:
+        value = -solve_game_quick_jump(board.apply_move(move), depth-1) 
+        result = max(value, result)
+        # if we found a winning move, there is no need to check other moves
+        if result == 1:
+            break
+    return result
+
+def solve_game_quick_jump_top(board, max_depth):
+    """
+    Traverses the whole game tree and calculates the optimal outcome.
+
+    Tries to prune unnecessary nodes.
+    """
+    print(f"Starting search at depth = {max_depth}")
+    Stats.start = time()
+    return solve_game_quick_jump(board, max_depth)
+
+#----------------------------------------------------------------------
+#  SOLVING THE WHOLE GAME TREE WITH A SPECIALIZED VERSION OF ALPHA-BETA
+#----------------------------------------------------------------------
+
+def solve_game_specialized_ab(board, depth, at_least_draw = False, at_most_draw = False):
+    """
+    Computes the theoretical result of the current position.
+    
+    The return value is:
+         1 when the current player wins
+         0 when the game ends in a draw with optimal play
+        -1 when the other player wins
+    """
+
+    Stats.total += 1
+    if Stats.total % 500000 == 0:
+        Stats.end = time()
+        time_diff = Stats.end - Stats.start
+        amount, suffix = humanize_time(time_diff)
+        percentage = (100 * Stats.total) / (TOTAL44 / 2)
+        print(f"visited {Stats.total // 1000000}M nodes [{percentage:.2f}%]"
+              f" in {amount:.2f}{suffix}"
+        )
+
+    # this will never be -1, because we don't go that far
+    evaluation = board.evaluate
+
+    if evaluation is not None:
+        if evaluation == 1:
+            # this means we have just lost
+            return -1
+        else:
+            return 0
+    if depth == 0:
+        raise RecursionError
+        
+    result = -1
+    for move in board.legal_moves:
+        value = -solve_game_specialized_ab(board.apply_move(move), depth-1, at_most_draw, at_least_draw) 
+        result = max(value, result)
+        # if we found a winning move, there is no need to check other moves
+        if result == 1:
+            break
+        if result == 0:
+            if at_most_draw:
+                break
+            else:
+                at_least_draw = True
+    return result
+
+def solve_game_specialized_ab_top(board, max_depth):
+    """
+    Traverses the whole game tree and calculates the optimal outcome.
+
+    Tries to prune unnecessary nodes.
+    """
+    print(f"Starting search at depth = {max_depth}")
+    Stats.start = time()
+    return solve_game_specialized_ab(board, max_depth)
+
+#---------------------------------------------------------------
+#  SOLVING THE WHOLE GAME TREE WITH QUICK JUMPS AND MEMOIZATION
+#---------------------------------------------------------------
+
+def solve_game_quick_jump_memo(board, depth, memo):
+    """
+    Computes the theoretical result of the current position.
+    
+    The return value is:
+         1 when the current player wins
+         0 when the game ends in a draw with optimal play
+        -1 when the other player wins
+    """
+
+    h = board.myhash
+    if h not in memo:
+        Stats.total += 1
+      
+        # this will never be -1, because we don't go that far
+        evaluation = board.evaluate
+
+        if evaluation is not None:
+            if evaluation == 1:
+                # this means we have just lost
+                result = -1
+            else:
+                result = 0
+        elif depth == 0:
+            raise RecursionError
+        else:
+            result = -1
+            for move in board.legal_moves:
+                value = -solve_game_quick_jump_memo(board.apply_move(move), depth-1, memo)
+                result = max(value, result)
+                # if we found a winning move, there is no need to check other moves
+                if result == 1:
+                    break
+        memo[h] = result
+    return memo[h]
+
+def solve_game_quick_jump_memo_top(board, max_depth):
+    """
+    Traverses the whole game tree and calculates the optimal outcome.
+
+    Tries to prune unnecessary nodes.
+    """
+    print(f"Starting search at depth = {max_depth}")
+    Stats.start = time()
+    memo = {}
+    return solve_game_quick_jump_memo(board, max_depth, memo)
+
+#----------------------------------------------------------------------
+#  SOLVING THE WHOLE GAME TREE WITH A SPECIALIZED VERSION OF ALPHA-BETA
+#----------------------------------------------------------------------
+
+def solve_game_specialized_ab_memo(board, depth, memo, at_least_draw = False, at_most_draw = False):
+    """
+    Computes the theoretical result of the current position.
+    
+    The return value is:
+         1 when the current player wins
+         0 when the game ends in a draw with optimal play
+        -1 when the other player wins
+    """
+
+    h = board.myhash
+    if h not in memo:
+        Stats.total += 1
+    
+        if Stats.total % 1000000 == 0:
+            Stats.end = time()
+            time_diff = Stats.end - Stats.start
+            amount, suffix = humanize_time(time_diff)
+            percentage = (100 * Stats.total) / 668607278
+            print(f"visited {Stats.total // 1000000}M nodes [{percentage:.2f}%]"
+                f" in {amount:.2f}{suffix}"
+            )
+        # this will never be -1, because we don't go that far
+        evaluation = board.evaluate
+
+        if evaluation is not None:
+            if evaluation == 1:
+                # this means we have just lost
+                return -1
+            else:
+                return 0
+        if depth == 0:
+            raise RecursionError
+            
+        result = -1
+        for move in board.legal_moves:
+            value = -solve_game_specialized_ab_memo(
+                board.apply_move(move), depth-1, memo, at_most_draw, at_least_draw) 
+            result = max(value, result)
+            # if we found a winning move, there is no need to check other moves
+            if result == 1:
+                break
+            if result == 0:
+                if at_most_draw:
+                    # we don't want to save this result in memo - it may not be accurate!
+                    # break
+                    return 0
+                else:
+                    at_least_draw = True
+        memo[h] = result
+    return memo[h]
+
+def solve_game_specialized_ab_top_memo(board, max_depth):
+    """
+    Traverses the whole game tree and calculates the optimal outcome.
+
+    Tries to prune unnecessary nodes.
+    """
+    print(f"Starting search at depth = {max_depth}")
+    Stats.start = time()
+    memo = {}
+    return solve_game_specialized_ab_memo(board, max_depth, memo)
+
+#-------------------------------------------------------
 # DRIVERS FOR RUNNING THE SEARCHES AND COLLECTING STATS
+#-------------------------------------------------------
+
+def solve_game_main():
+    try:
+        # -result = solve_game_alphabeta_top(Board(), Config.COLS * Config.ROWS)
+        result = solve_game_specialized_ab_top_memo(Board(), Config.COLS * Config.ROWS)
+    except RecursionError:
+        result = "Not deep enough"
+    print(f"Game solved. Result = {result}")
+    print(f"[1 = first player wins, -1 = second player wins, 0 = draw]")
+    print(f"Total visited nodes = {Stats.total:,}")
+    Stats.end = time()
+    amount, suffix = humanize_time(Stats.end - Stats.start)
+    print(f"Total time: {amount:.2f}{suffix}")
+
+#-------------------------------------------------------
+#           SEARCHING THE WHOLE GAME TREE
+#-------------------------------------------------------
+
+def search_all(board, depth):
+    """
+    Search the whole game tree starting from BOARD and
+    going at move DEPTH moves from BOARD,
+    ie. we stop recursion at depth == 0
+    """
+    Stats.total += 1
+    if depth == 0:
+        Stats.terminal += 1
+    if board.is_finished:
+        if depth == 0:
+            Stats.finished += 1
+    elif depth >= 1:
+        for move in board.legal_moves:
+            search_all(board.apply_move(move), depth-1) 
+
+#-------------------------------------------------------
+#    SEARCHING THE WHOLE GAME TREE WITH MEMOIZATION
+#-------------------------------------------------------
+
+def search_all_memo(board, depth, memo, moves_made):
+    """
+    Search the whole game tree starting from BOARD and
+    going at move DEPTH moves from BOARD,
+    ie. we stop recursion at depth == 0
+
+    This version uses memoization to ensure that we don't expand the same node twice.
+    Note that we don't have to store the depth in the memo, since
+    """
+    # h = board.str_hash
+    CUT_OFF = 19
+    h = board.myhash
+    if h not in memo:
+        Stats.total += 1
+        if depth == 0:
+            Stats.terminal += 1
+        if board.is_finished:
+            if depth == 0:
+                Stats.finished += 1
+        elif depth >= 1:
+            for move in board.legal_moves:
+                search_all_memo(board.apply_move(move), depth-1, memo, moves_made + 1)
+        if moves_made < CUT_OFF:
+            memo.add(h)
+
+def search_all_memo_top(board, depth):
+    memo = set()
+    search_all_memo(board, depth, memo, 0)
+    # memo_size = sys.getsizeof(memo)
+    # val, suf = humanize_bytes(memo_size)
+    # print(f"\nmemo size = {int(val)}{suf}")
+    return len(memo)
+
+#-------------------------------------------------------
+#       DRIVER FOR SEARCHING THE WHOLE GAME TREE
 #-------------------------------------------------------
 
 def print_time_estimate(depth, times):
@@ -225,88 +533,19 @@ def search_all_main(start = 0, end = Config.COLS * Config.ROWS):
             f"[memo size: {memo_size:,}]"
             )
 
-def solve_game_main():
-    try:
-        result = solve_game_memo_top(Board(), Config.COLS * Config.ROWS)
-    except RecursionError:
-        result = "Not deep enough"
-    print(f"Game solved. Result = {result}")
-    print(f"[1 = first player wins, -1 = second player wins, 0 = draw]")
-    print(f"Total visited nodes = {Stats.total:,}")
-
-
-#-------------------------------------------------------
-#           SEARCHING THE WHOLE GAME TREE
-#-------------------------------------------------------
-
-def search_all(board, depth):
-    """
-    Search the whole game tree starting from BOARD and
-    going at move DEPTH moves from BOARD,
-    ie. we stop recursion at depth == 0
-    """
-    Stats.total += 1
-    if depth == 0:
-        Stats.terminal += 1
-    if board.is_finished:
-        if depth == 0:
-            Stats.finished += 1
-    elif depth >= 1:
-        for move in board.legal_moves:
-            search_all(board.apply_move(move), depth-1) 
-
-
-#-------------------------------------------------------
-#    SEARCHING THE WHOLE GAME TREE WITH MEMOIZATION
-#-------------------------------------------------------
-
-def search_all_memo(board, depth, memo, moves_made):
-    """
-    Search the whole game tree starting from BOARD and
-    going at move DEPTH moves from BOARD,
-    ie. we stop recursion at depth == 0
-
-    This version uses memoization to ensure that we don't expand the same node twice.
-    Note that we don't have to store the depth in the memo, since
-    """
-    # h = board.str_hash
-    CUT_OFF = 19
-    h = board.myhash
-    if h not in memo:
-        Stats.total += 1
-        if depth == 0:
-            Stats.terminal += 1
-        if board.is_finished:
-            if depth == 0:
-                Stats.finished += 1
-        elif depth >= 1:
-            for move in board.legal_moves:
-                search_all_memo(board.apply_move(move), depth-1, memo, moves_made + 1)
-        if moves_made < CUT_OFF:
-            memo.add(h)
-
-def search_all_memo_top(board, depth):
-    memo = set()
-    search_all_memo(board, depth, memo, 0)
-    # memo_size = sys.getsizeof(memo)
-    # val, suf = humanize_bytes(memo_size)
-    # print(f"\nmemo size = {int(val)}{suf}")
-    return len(memo)
-
 #-------------------------------------------------------
 #                  THE STARTING POINT
 #-------------------------------------------------------
 
 def main():
-    Config.COLS = 5
-    Config.ROWS = 6
-    Config.SIZE = 16
+    Config.COLS = 6
+    Config.ROWS = 5
+    Config.SIZE = 30
 
     print(f"Current size [COLS x ROWS]: {Config.COLS} x {Config.ROWS}")
-    search_all_main(end = Config.COLS * Config.ROWS)
-    #solve_game_main()
+    # search_all_main(end = Config.COLS * Config.ROWS)
+    solve_game_main()
     #solve_game_memo_top(Board(), Config.SIZE)
-
 
 if __name__ == "__main__":
     main()
