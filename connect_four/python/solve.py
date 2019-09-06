@@ -132,64 +132,6 @@ def solve_game_memo_top(board, depth = Config.COLS * Config.ROWS):
     return solve_game_memo(board, depth, memo, moves_made=0)
 
 #-------------------------------------------------------
-#           SEARCHING THE WHOLE GAME TREE
-#-------------------------------------------------------
-
-def search_all(board, depth):
-    """
-    Search the whole game tree starting from BOARD and
-    going at move DEPTH moves from BOARD,
-    ie. we stop recursion at depth == 0
-    """
-    Stats.total += 1
-    if depth == 0:
-        Stats.terminal += 1
-    if board.is_finished:
-        if depth == 0:
-            Stats.finished += 1
-    elif depth >= 1:
-        for move in board.legal_moves:
-            search_all(board.apply_move(move), depth-1) 
-
-
-#-------------------------------------------------------
-#    SEARCHING THE WHOLE GAME TREE WITH MEMOIZATION
-#-------------------------------------------------------
-
-def search_all_memo(board, depth, memo, moves_made):
-    """
-    Search the whole game tree starting from BOARD and
-    going at move DEPTH moves from BOARD,
-    ie. we stop recursion at depth == 0
-
-    This version uses memoization to ensure that we don't expand the same node twice.
-    Note that we don't have to store the depth in the memo, since
-    """
-    # h = board.str_hash
-    CUT_OFF = 19
-    h = board.myhash
-    if h not in memo:
-        Stats.total += 1
-        if depth == 0:
-            Stats.terminal += 1
-        if board.is_finished:
-            if depth == 0:
-                Stats.finished += 1
-        elif depth >= 1:
-            for move in board.legal_moves:
-                search_all_memo(board.apply_move(move), depth-1, memo, moves_made + 1)
-        if moves_made < CUT_OFF:
-            memo.add(h)
-
-def search_all_memo_top(board, depth):
-    memo = set()
-    search_all_memo(board, depth, memo, 0)
-    # memo_size = sys.getsizeof(memo)
-    # val, suf = humanize_bytes(memo_size)
-    # print(f"\nmemo size = {int(val)}{suf}")
-    return len(memo)
-
-#-------------------------------------------------------
 #  SOLVING THE WHOLE GAME TREE WITH ALPHA-BETA PRUNNING
 #-------------------------------------------------------
 
@@ -291,6 +233,65 @@ def solve_game_main():
     print(f"Game solved. Result = {result}")
     print(f"[1 = first player wins, -1 = second player wins, 0 = draw]")
     print(f"Total visited nodes = {Stats.total:,}")
+
+
+#-------------------------------------------------------
+#           SEARCHING THE WHOLE GAME TREE
+#-------------------------------------------------------
+
+def search_all(board, depth):
+    """
+    Search the whole game tree starting from BOARD and
+    going at move DEPTH moves from BOARD,
+    ie. we stop recursion at depth == 0
+    """
+    Stats.total += 1
+    if depth == 0:
+        Stats.terminal += 1
+    if board.is_finished:
+        if depth == 0:
+            Stats.finished += 1
+    elif depth >= 1:
+        for move in board.legal_moves:
+            search_all(board.apply_move(move), depth-1) 
+
+
+#-------------------------------------------------------
+#    SEARCHING THE WHOLE GAME TREE WITH MEMOIZATION
+#-------------------------------------------------------
+
+def search_all_memo(board, depth, memo, moves_made):
+    """
+    Search the whole game tree starting from BOARD and
+    going at move DEPTH moves from BOARD,
+    ie. we stop recursion at depth == 0
+
+    This version uses memoization to ensure that we don't expand the same node twice.
+    Note that we don't have to store the depth in the memo, since
+    """
+    # h = board.str_hash
+    CUT_OFF = 19
+    h = board.myhash
+    if h not in memo:
+        Stats.total += 1
+        if depth == 0:
+            Stats.terminal += 1
+        if board.is_finished:
+            if depth == 0:
+                Stats.finished += 1
+        elif depth >= 1:
+            for move in board.legal_moves:
+                search_all_memo(board.apply_move(move), depth-1, memo, moves_made + 1)
+        if moves_made < CUT_OFF:
+            memo.add(h)
+
+def search_all_memo_top(board, depth):
+    memo = set()
+    search_all_memo(board, depth, memo, 0)
+    # memo_size = sys.getsizeof(memo)
+    # val, suf = humanize_bytes(memo_size)
+    # print(f"\nmemo size = {int(val)}{suf}")
+    return len(memo)
 
 #-------------------------------------------------------
 #                  THE STARTING POINT
