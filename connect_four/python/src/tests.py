@@ -14,6 +14,19 @@ class BoardTest(unittest.TestCase):
             b.apply_move(5)
         )
 
+    def test_myhash(self):
+        b1 = Board().apply_move(1).apply_move(2).apply_move(3)
+        b2 = Board().apply_move(3).apply_move(2).apply_move(1)
+        self.assertEqual(b1.myhash, b2.myhash)
+
+        b3 = Board().apply_move(1)
+        b4 = Board().apply_move(2)
+        self.assertNotEqual(b3.myhash, b4.myhash)
+
+        b5 = Board().apply_move(1).apply_move(4).apply_move(3).apply_move(2)
+        b6 = Board().apply_move(3).apply_move(2).apply_move(1).apply_move(4)
+        self.assertEqual(b5.myhash, b6.myhash)
+
     def test_pretty(self):
         b = Board()
         b.apply_move(5).apply_move(4).apply_move(3).apply_move(3)

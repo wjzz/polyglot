@@ -1,0 +1,86 @@
+# Using simple search and a generator
+
+Starting full search for size 4 x 4
+Elapsed time: 3m
+Depth 16:   131,060,741 [0.73 M nodes per sec]
+
+# Without a generator
+
+Starting full search for size 4 x 4
+Elapsed time: 2m
+Depth 16:   131,060,741 [1.20 M nodes per sec]
+
+$ main.py --start 1
+COLS = 4
+ROWS = 4
+GENERATOR = False
+MEMO = False
+DEPTH = None
+START = 1
+END = None
+generator fun = count_all_top
+Depth  1:             5 [0.08 M nodes per sec] [0.0s]
+Depth  2:            21 [0.08 M nodes per sec] [0.0s]
+Depth  3:            85 [0.08 M nodes per sec] [0.0s]
+Depth  4:           341 [0.05 M nodes per sec] [0.0s]
+Depth  5:         1,361 [0.04 M nodes per sec] [0.0s]
+Depth  6:         5,381 [0.04 M nodes per sec] [0.2s]
+Depth  7:        20,921 [0.10 M nodes per sec] [0.2s]
+Depth  8:        78,425 [0.27 M nodes per sec] [0.3s]
+Depth  9:       285,329 [0.95 M nodes per sec] [0.3s]
+Depth 10:       975,833 [1.60 M nodes per sec] [0.6s]
+Depth 11:     3,136,337 [1.92 M nodes per sec] [1.6s]
+Depth 12:     9,128,433 [1.86 M nodes per sec] [4.9s]
+Depth 13:    23,840,457 [1.75 M nodes per sec] [13.6s]
+Depth 14:    52,691,377 [1.55 M nodes per sec] [33.9s]
+Depth 15:    95,447,457 [1.38 M nodes per sec] [1.2m]
+Depth 16:   131,060,741 [1.11 M nodes per sec] [2.0m]
+
+$ main.py 4 5 --start 0
+COLS = 4
+ROWS = 5
+GENERATOR = False
+MEMO = False
+DEPTH = None
+START = 0
+END = None
+generator fun = count_all_top
+Depth  0:             1 [0.22 M nodes per sec] [0.0s]
+Depth  1:             5 [0.08 M nodes per sec] [0.0s]
+Depth  2:            21 [0.08 M nodes per sec] [0.0s]
+Depth  3:            85 [0.08 M nodes per sec] [0.0s]
+Depth  4:           341 [0.06 M nodes per sec] [0.0s]
+Depth  5:         1,365 [0.04 M nodes per sec] [0.0s]
+Depth  6:         5,457 [0.04 M nodes per sec] [0.2s]
+Depth  7:        21,753 [0.14 M nodes per sec] [0.2s]
+Depth  8:        85,173 [0.24 M nodes per sec] [0.4s]
+Depth  9:       331,437 [0.46 M nodes per sec] [0.7s]
+Depth 10:     1,250,661 [0.95 M nodes per sec] [1.3s]
+Depth 11:     4,617,109 [1.55 M nodes per sec] [3.0s]
+Depth 12:    16,261,233 [1.82 M nodes per sec] [8.9s]
+Depth 13:    54,879,829 [1.95 M nodes per sec] [28.2s]
+Depth 14:   172,664,429 [1.96 M nodes per sec] [1.5m]
+Depth 15:   505,768,717 [1.80 M nodes per sec] [4.7m]
+
+time pypy3 main.py 5 4 --start 0
+COLS = 5
+ROWS = 4
+GENERATOR = False
+MEMO = False
+DEPTH = None
+START = 0
+END = None
+generator fun = count_all_top
+Depth  0:             1 [0.17 M nodes per sec] [0.0s]
+Depth  1:             6 [0.07 M nodes per sec] [0.0s]
+Depth  2:            31 [0.08 M nodes per sec] [0.0s]
+Depth  3:           156 [0.08 M nodes per sec] [0.0s]
+Depth  4:           781 [0.04 M nodes per sec] [0.0s]
+Depth  5:         3,901 [0.03 M nodes per sec] [0.1s]
+Depth  6:        19,401 [0.11 M nodes per sec] [0.2s]
+Depth  7:        95,701 [0.23 M nodes per sec] [0.4s]
+Depth  8:       459,009 [0.48 M nodes per sec] [0.9s]
+Depth  9:     2,177,553 [1.05 M nodes per sec] [2.1s]
+Depth 10:     9,916,293 [1.27 M nodes per sec] [7.8s]
+Depth 11:    44,088,377 [1.51 M nodes per sec] [29.3s]
+Depth 12:   184,850,073 [1.56 M nodes per sec] [2.0m]
