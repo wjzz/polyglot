@@ -1,5 +1,4 @@
 from enum import Enum
-from random import choice
 
 class Piece(Enum):
     X = "X"
@@ -23,8 +22,8 @@ class Piece(Enum):
         return self.value
 
 class Config:
-    ROWS = 6
     COLS = 7
+    ROWS = 6
 
 class Board:
     @classmethod
@@ -43,11 +42,16 @@ class Board:
                 row += 1
             lens.append(row)
 
+        # count the numver of moves made so far        
+        moves_made = sum( sum(1 for piece in col if piece.not_empty) 
+                          for col in cols)
+
         b._current = current
         b._cols = cols
         b._last = last
         b._lasts = [None, last]
         b._lens = lens
+        b._moves_made = moves_made
         
         # FIXME: implement this
         b._myhash = -1
@@ -68,9 +72,9 @@ class Board:
         self._last = None
         self._lasts = [None]
         self._lens = empty_lens
+        self._moves_made = 0
+        self._max_moves = Config.COLS * Config.ROWS
         
-        # TODO: add a "moves_made" property
-
         # FIXME: implement hashing
         self._myhash = -1 
 
@@ -86,10 +90,13 @@ class Board:
         for col in self._cols:
             assert(len(col) == Config.ROWS)
 
-        # check if current player is correct
+        # check if moves made is correct
         moves_made = sum( sum(1 for piece in col if piece.not_empty) 
                           for col in self._cols)
-
+        assert(self._moves_made == moves_made)
+        assert(self._moves_made <= self._max_moves)
+        
+        # check if current player is correct
         if moves_made % 2 == 0:
             assert(self._current == Piece.X)
         else:
@@ -187,8 +194,6 @@ class Board:
             last = move, 
             prev_hash = self.myhash)
 
-    # TODO: write unittests for make/unmake moves
-
     def make_move(self, move):
         self._lasts.append(move)
         self._last = move
@@ -197,6 +202,9 @@ class Board:
         self._cols[move][self._lens[move]] = player
         self._lens[move] += 1
         self._current = player.opposite
+        self._moves_made += 1
+        
+        self._invariant()
 
     def unmake_move(self, move):
         last = self._last
@@ -207,14 +215,16 @@ class Board:
         self._cols[last][self._lens[last]] = Piece.E
         self._lasts.pop()
         self._last = self._lasts[-1]
+        self._moves_made -= 1
+
+        self._invariant()
      
     @property
     def is_win(self):
-        # TODO: optimization
-        # there must be at least 7 moves for a win
-        if self._last is None:
+        if self._last is None or self._moves_made < 7:
             return False
         # TODO: optimization - we don't have to go up
+
         return (self._check_line(0, 1)
              or self._check_line(1, 0)
              or self._check_line(1, 1)
@@ -227,30 +237,19 @@ class Board:
 
     def _check_straight_line(self, dx, dy):
         col = self._last
-        assert(col != None)
         cols = self._cols
         player = self._current.opposite
-        assert (player != Piece.E)
-
-        # TODO: this can be easily optimized
-        # find the last move
-
-        # FIXME: this doesn't work
-        # row = self._lens[col] - 1
-
-        # iefficient but correct way of calculating the row
-        # of the last move played
-        row = 0
-        assert(cols[col][row] != Piece.E)
-        while row + 1 < Config.ROWS and cols[col][row+1] != Piece.E:
-           row += 1
-        assert(cols[col][row] == player)
-
+        row = self._lens[self._last] - 1        
+        
         in_line = 0
         cc, cr = col + dx, row + dy
-        while 0 <= cc < Config.COLS and 0 <= cr < Config.ROWS:
+
+        COLS = Config.COLS
+        ROWS = Config.ROWS
+        
+        while 0 <= cc < COLS and 0 <= cr < ROWS:
             ccol = cols[cc]
-            if cr >= Config.ROWS or ccol[cr] != player:
+            if cr >= ROWS or ccol[cr] != player:
                 break
             in_line += 1
             cc, cr = cc + dx, cr + dy
@@ -258,9 +257,7 @@ class Board:
     
     @property
     def is_draw(self):
-        # TODO: this can be easily optimized
-        # by counting moves made so far
-        return [] == self.legal_moves
+        return self._moves_made == self._max_moves
 
     @property
     def is_finished(self):

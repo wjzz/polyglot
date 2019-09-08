@@ -29,6 +29,9 @@ Lessons and ideas
 * pypy3 uses more RAM than cpython
 * pypy3 seems to be around 4x faster than cpython
 * inlining the enum type (into a bool or int) doesn't help performance
+* PERF: for cpython mutable vs immutable doesn't make a big difference,
+        but for pypy3 the mutable version is 2-3 times faster at move
+        generation.
 
 Results
 =======
