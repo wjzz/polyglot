@@ -1,0 +1,75 @@
+# IMMUTABLE VERSION
+
+generator fun = count_all_top
+Depth  0:             1 [0.17 M nodes per sec] [0.0s]
+Depth  1:             5 [0.09 M nodes per sec] [0.0s]
+Depth  2:            21 [0.09 M nodes per sec] [0.0s]
+Depth  3:            85 [0.08 M nodes per sec] [0.0s]
+Depth  4:           341 [0.06 M nodes per sec] [0.0s]
+Depth  5:         1,361 [0.04 M nodes per sec] [0.0s]
+Depth  6:         5,381 [0.06 M nodes per sec] [0.1s]
+Depth  7:        20,921 [0.28 M nodes per sec] [0.1s]
+Depth  8:        78,425 [0.83 M nodes per sec] [0.1s]
+Depth  9:       285,329 [1.49 M nodes per sec] [0.2s]
+Depth 10:       975,833 [1.53 M nodes per sec] [0.6s]
+Depth 11:     3,136,337 [1.50 M nodes per sec] [2.1s]
+Depth 12:     9,128,433 [1.40 M nodes per sec] [6.5s]
+Depth 13:    23,840,457 [1.31 M nodes per sec] [18.2s]
+Depth 14:    52,691,377 [1.13 M nodes per sec] [46.7s]
+Depth 15:    95,447,457 [0.98 M nodes per sec] [1.6m]
+Depth 16:   131,060,741 [0.81 M nodes per sec] [2.7m]
+
+# MUTABLE VERSION
+
+$ pypy3 main.py --start 0 --mutable
+COLS = 4
+ROWS = 4
+GENERATOR = False
+MEMO = False
+DEPTH = None
+START = 0
+END = None
+generator fun = count_all_mutable_top
+Depth  0:             1 [0.16 M nodes per sec] [0.0s]
+Depth  1:             5 [0.05 M nodes per sec] [0.0s]
+Depth  2:            21 [0.02 M nodes per sec] [0.0s]
+Depth  3:            85 [0.09 M nodes per sec] [0.0s]
+Depth  4:           341 [0.08 M nodes per sec] [0.0s]
+Depth  5:         1,361 [0.03 M nodes per sec] [0.0s]
+Depth  6:         5,381 [0.06 M nodes per sec] [0.1s]
+Depth  7:        20,921 [0.31 M nodes per sec] [0.1s]
+Depth  8:        78,425 [1.08 M nodes per sec] [0.1s]
+Depth  9:       285,329 [2.45 M nodes per sec] [0.1s]
+Depth 10:       975,833 [2.39 M nodes per sec] [0.4s]
+Depth 11:     3,136,337 [2.35 M nodes per sec] [1.3s]
+Depth 12:     9,128,433 [2.16 M nodes per sec] [4.2s]
+Depth 13:    23,840,457 [1.96 M nodes per sec] [12.2s]
+Depth 14:    52,691,377 [1.72 M nodes per sec] [30.7s]
+Depth 15:    95,447,457 [1.47 M nodes per sec] [1.1m]
+Depth 16:   131,060,741 [1.16 M nodes per sec] [1.9m]
+
+pypy3 main.py 4 5 --start 0 --mutable
+COLS = 4
+ROWS = 5
+GENERATOR = False
+MEMO = False
+DEPTH = None
+START = 0
+END = None
+generator fun = count_all_mutable_top
+Depth  0:             1 [0.21 M nodes per sec] [0.0s]
+Depth  1:             5 [0.10 M nodes per sec] [0.0s]
+Depth  2:            21 [0.04 M nodes per sec] [0.0s]
+Depth  3:            85 [0.10 M nodes per sec] [0.0s]
+Depth  4:           341 [0.08 M nodes per sec] [0.0s]
+Depth  5:         1,365 [0.04 M nodes per sec] [0.0s]
+Depth  6:         5,457 [0.06 M nodes per sec] [0.1s]
+Depth  7:        21,753 [0.23 M nodes per sec] [0.1s]
+Depth  8:        85,173 [0.89 M nodes per sec] [0.1s]
+Depth  9:       331,437 [2.02 M nodes per sec] [0.2s]
+Depth 10:     1,250,661 [2.23 M nodes per sec] [0.6s]
+Depth 11:     4,617,109 [2.49 M nodes per sec] [1.9s]
+Depth 12:    16,261,233 [2.41 M nodes per sec] [6.7s]
+Depth 13:    54,879,829 [2.33 M nodes per sec] [23.5s]
+Depth 14:   172,664,429 [2.10 M nodes per sec] [1.4m]
+Depth 15:   505,768,717 [2.02 M nodes per sec] [4.2m]
