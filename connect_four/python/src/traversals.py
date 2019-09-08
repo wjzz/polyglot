@@ -22,6 +22,24 @@ def traverse_unique_immutable(board, depth):
                     yield from iter(board.apply_move(move), depth-1)
     yield from iter(board, depth)
 
+
+def count_all_mutable_top(board, depth):
+    """
+    Counts the number of nodes in the game tree.
+    """
+    total = 0
+    def iter(depth):
+        nonlocal total
+        total += 1
+        if depth >= 1 and not board.is_finished:
+            for move in board.legal_moves:
+                board.make_move(move)
+                iter(depth-1) 
+                board.unmake_move(move)
+    iter(depth)
+    return total
+
+
 def count_all_top(board, depth):
     """
     Counts the number of nodes in the game tree.

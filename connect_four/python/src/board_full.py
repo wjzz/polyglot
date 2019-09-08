@@ -4,6 +4,7 @@ from random import choice
 class Piece(Enum):
     X = "X"
     O = "O"
+    E = "."
 
     @property
     def opposite(self):
@@ -12,7 +13,11 @@ class Piece(Enum):
         elif self == Piece.O:
             return Piece.X
         else:
-            raise TypeError
+            return Piece.E
+
+    @property
+    def not_empty(self):
+        return self != Piece.E
 
     def __str__(self):
         return self.value
@@ -22,85 +27,120 @@ class Config:
     COLS = 7
 
 class Board:
-    def __init__(self, cols = None, current = Piece.X, last = None, prev_hash = None):
-        if not cols:
-            cols = [ [] for _ in range(Config.COLS) ]
+    @classmethod
+    def constr(cls, cols, current, last, prev_hash=None):
+        """
+        Initializes a board from the given state.
+        """
+        # construct an empty board
+        b = cls()
 
-        self._cols = cols
-        self._current = current
-        self._last = last
+        # find the first empty space for each col
+        lens = []
+        for col in cols:
+            row = 0
+            while row < Config.ROWS and col[row].not_empty:
+                row += 1
+            lens.append(row)
 
-        if prev_hash != None:
-            assert(current != None and last != None)
-            bits_to_move = 2 * (Config.ROWS * (Config.COLS - last) - len(cols[last]))
-            if current.opposite == Piece.X:
-                last_piece = 0b01
-            else:
-                last_piece = 0b10
-            mask = last_piece << bits_to_move
+        b._current = current
+        b._cols = cols
+        b._last = last
+        b._lasts = [None, last]
+        b._lens = lens
+        
+        # FIXME: implement this
+        b._myhash = -1
 
-            new_hash = prev_hash | mask
-            # if (h != new_hash):
-            #     # print()
-            #     print(f"\nnew mask = [{mask:52b}] bits_to_move = {bits_to_move} last = {last}")
-            #     print(f"old hash = [{h:52b}]")
-            #     print(f"new hash = [{new_hash:52b}]")
-            self._myhash = new_hash
+        b._invariant()
+
+        return b
+
+    def __init__(self):
+        """
+        Initializes an empty board.
+        """
+        empty_cols = [ [Piece.E] * Config.ROWS for _ in range(Config.COLS) ]
+        empty_lens = [0] * Config.COLS
+
+        self._current = Piece.X
+        self._cols = empty_cols
+        self._last = None
+        self._lasts = [None]
+        self._lens = empty_lens
+        
+        # TODO: add a "moves_made" property
+
+        # FIXME: implement hashing
+        self._myhash = -1 
+
+        self._invariant()
+
+    def _invariant(self):
+        """
+        Checks if various invariants hold for the current instance.
+        """
+
+        # check the sizes of the cols:
+        assert(len(self._cols) == Config.COLS)
+        for col in self._cols:
+            assert(len(col) == Config.ROWS)
+
+        # check if current player is correct
+        moves_made = sum( sum(1 for piece in col if piece.not_empty) 
+                          for col in self._cols)
+
+        if moves_made % 2 == 0:
+            assert(self._current == Piece.X)
         else:
-            h = 1
-            for col in self._cols:
-                for piece in col:
-                    h <<= 2
-                    if piece == Piece.X:
-                        h |= 0b01
-                    else:
-                        h |= 0b10
-                h <<= 2 * (Config.ROWS - len(col))
-            self._myhash = h
+            assert(self._current == Piece.O)
 
+        # check the last property
+
+        # self._last is None    <=>        moves_made == 0
+        if moves_made == 0:
+            assert(self._last is None)
+        else:
+            assert(self._last is not None)
+
+        # the lens properties
+        # self._lens[cc] is the index the of the first empty
+        # field (or equivalently: it's the number of pieces
+        # in the given column)
+        for cc, col in enumerate(self._cols):
+            stored_len = self._lens[cc]
+            assert(stored_len <= len(col))
+            if stored_len < len(col):
+                assert(col[stored_len] == Piece.E)
+                for i in range(stored_len):
+                    assert(col[i].not_empty)
+        
     def __eq__(self, other):
-        return ((self._current, self._last, self._cols) 
-                == (other._current, other._last, other._cols))
+        return str(self) == str(other)
+        # return ((self._current, self._last, self._cols) 
+        #         == (other._current, other._last, other._cols))
 
     def __str__(self):
         output = ""
         for row in reversed(range(Config.ROWS)):
             output += f"{row + 1} "
             for col in self._cols:
-                if row < len(col):
-                    output += str(col[row])
-                else:
-                    output += "."
+                output += str(col[row])
             output += "\n"
         output += f"last = {self._last}\n"
         return output
 
-    # TODO: write unit tests for this
     # NOTE: this is more like a full encoding that merely a hash
     @property
     def myhash(self):
         return self._myhash
-
-        # h = 1
-        # for col in self._cols:
-        #     for piece in col:
-        #         h <<= 2
-        #         if piece == Piece.X:
-        #             h |= 0b01
-        #         else:
-        #             h |= 0b10
-        #     h <<= 2 * (Config.ROWS - len(col))
-        # return h
         
     @property
     def str_hash(self):
         output = ""
         for row in reversed(range(Config.ROWS)):
             for col in self._cols:
-                if row < len(col):
-                    output += str(col[row])
-                else:
-                    output += "."
+                output += str(col[row])
         return output
 
     @classmethod
@@ -109,14 +149,14 @@ class Board:
         assert(len(lines) == Config.ROWS + 1)
 
         non_empty = 0
-        cols = [ [] for _ in range(Config.COLS) ]
-        for row in reversed(lines[:-1]):
+        cols = [ [Piece.E] * Config.ROWS for _ in range(Config.COLS) ]
+        for row_idx, row in enumerate(reversed(lines[:-1])):
             row = row[2:]
             assert(len(row) == Config.COLS)
             for col, field in enumerate(row):
                 if field != ".":
                     non_empty +=1
-                    cols[col].append(Piece(field))
+                cols[col][row_idx] = Piece(field)
         
         last_line_parts = lines[-1].split(" = ")
         assert(len(last_line_parts) == 2)
@@ -125,18 +165,48 @@ class Board:
 
         current = Piece.X if non_empty % 2 == 0 else Piece.O
 
-        return Board(cols, current, last)
+        return Board.constr(cols, current, last)
 
     @property
     def legal_moves(self):
         return [ i for i, col in enumerate(self._cols) 
-                 if len(col) < Config.ROWS ]
+                 if col[-1] == Piece.E ]
 
     def apply_move(self, move):
-        assert (len(self._cols[move]) < Config.ROWS)
+        # assert (self._cols[move][-1] == Piece.E)
         cols = [ col.copy() for col in self._cols ]
-        cols[move].append(self._current)
-        return Board(cols, self._current.opposite, last = move, prev_hash = self.myhash)
+        
+        # find empty row
+        i = 0
+        while cols[move][i] != Piece.E:
+            i += 1
+        cols[move][i] = self._current
+
+        return Board.constr(cols, 
+            current = self._current.opposite, 
+            last = move, 
+            prev_hash = self.myhash)
+
+    # TODO: write unittests for make/unmake moves
+
+    def make_move(self, move):
+        self._lasts.append(move)
+        self._last = move
+        player = self._current
+
+        self._cols[move][self._lens[move]] = player
+        self._lens[move] += 1
+        self._current = player.opposite
+
+    def unmake_move(self, move):
+        last = self._last
+        self._lens[last] -= 1
+
+        player = self._current
+        self._current = player.opposite
+        self._cols[last][self._lens[last]] = Piece.E
+        self._lasts.pop()
+        self._last = self._lasts[-1]
      
     @property
     def is_win(self):
@@ -144,6 +214,7 @@ class Board:
         # there must be at least 7 moves for a win
         if self._last is None:
             return False
+        # TODO: optimization - we don't have to go up
         return (self._check_line(0, 1)
              or self._check_line(1, 0)
              or self._check_line(1, 1)
@@ -156,15 +227,30 @@ class Board:
 
     def _check_straight_line(self, dx, dy):
         col = self._last
+        assert(col != None)
         cols = self._cols
-        player = cols[col][-1]
-        row = len(cols[col]) - 1
+        player = self._current.opposite
+        assert (player != Piece.E)
+
+        # TODO: this can be easily optimized
+        # find the last move
+
+        # FIXME: this doesn't work
+        # row = self._lens[col] - 1
+
+        # iefficient but correct way of calculating the row
+        # of the last move played
+        row = 0
+        assert(cols[col][row] != Piece.E)
+        while row + 1 < Config.ROWS and cols[col][row+1] != Piece.E:
+           row += 1
+        assert(cols[col][row] == player)
 
         in_line = 0
         cc, cr = col + dx, row + dy
         while 0 <= cc < Config.COLS and 0 <= cr < Config.ROWS:
             ccol = cols[cc]
-            if cr >= len(ccol) or ccol[cr] != player:
+            if cr >= Config.ROWS or ccol[cr] != player:
                 break
             in_line += 1
             cc, cr = cc + dx, cr + dy
@@ -196,45 +282,54 @@ class Board:
             return 0
         return None
 
-def random_game_length():
-    board = Board()
-    moves = board.legal_moves
-    i = 0
-    while moves:
-        move = choice(moves)
-        board = board.apply_move(move)
-        i += 1
-        if board.is_win or board.is_draw:
-            break
-        else:
-            moves = board.legal_moves
-    return i
+    def succesors(self, depth):
+        """
+        A generator containing all successor nodes 
+        coming from the given position.
 
-def random_game():
-    board = Board()
-    moves = board.legal_moves
-    i = 0
-    while moves:
-        print(board)
-        move = choice(moves)
-        print(f"Turn {i}> Playing move: {move} out of {moves}")
-        board = board.apply_move(move)
-        i += 1
-        if board.is_win:
-            print("Game won!\n")
-            break
-        elif board.is_finished:
-            print("Draw!\n")
-            break
-        else:
-            moves = board.legal_moves
-    print(board)
+        For clarity, it uses the immutable 
+        version of making the move.
+        """
+        def iter(board, depth):
+            yield board
+            if depth > 0 and not board.is_finished:
+                for move in board.legal_moves:
+                    yield from iter(board.apply_move(move), depth-1)
+        
+        yield from iter(self, depth)
 
-if __name__ == "__main__":
-    GAMES = 5000
-    total = 0
-    for game in range(GAMES):
-        moves_no = random_game_length()
-        total += moves_no
-        #print(f"Game #{game+1} finished after: {moves_no}")
-    print(f"After {GAMES} games average = {total / GAMES}")
+    def succesors_mut(self, depth):
+        """
+        A generator containing all successor node hashes
+        coming from the given position.
+
+        We don't return the boards, because the pointers
+        will be invalid.
+
+        For performance, it uses the mutable version of
+        making and unmaking the move.
+        """
+        def iter(board, depth):
+            yield board.str_hash
+            if depth > 0 and not board.is_finished:
+                for move in board.legal_moves:
+                    board.make_move(move)
+                    yield from iter(board, depth-1)
+                    board.unmake_move(move)
+        
+        yield from iter(self, depth)
+
+    def visit_all_mut(self, depth, visitor):
+        """
+        Visits all nodes starting from the current one until the given depth
+        and performs some imperative action.
+        """
+        def iter(board, depth):
+            visitor(board)
+            if depth > 0 and not board.is_finished:
+                for move in board.legal_moves:
+                    board.make_move(move)
+                    iter(board, depth-1)
+                    board.unmake_move(move)
+        
+        iter(self, depth)

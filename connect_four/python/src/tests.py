@@ -148,7 +148,7 @@ class BoardTest(unittest.TestCase):
             "3 XO.....\n"
             "2 XO.....\n"
             "1 XO.....\n"
-            "last = 1\n"
+            "last = 0\n"
             ,
             "6 .....O.\n"
             "5 .....X.\n"
@@ -186,8 +186,8 @@ class BoardTest(unittest.TestCase):
             "5 .......\n"
             "4 X......\n"
             "3 XX.....\n"
-            "2 OXX....\n"
-            "1 OOXOO..\n"
+            "2 OXO....\n"
+            "1 OOXXO..\n"
             "last = 3\n"
             ,
             "6 .......\n"

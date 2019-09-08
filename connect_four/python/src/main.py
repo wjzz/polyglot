@@ -1,4 +1,4 @@
-from board import Board, Config
+from board_full import Board, Config
 import traversals as trav
 from utils import humanize_time, Timer
 
@@ -58,6 +58,10 @@ if __name__ == "__main__":
                     const=True, default=False,
                     help='use a generator (default: dedicated traversal)')
 
+    parser.add_argument('--mutable', dest='mutable', type=bool, nargs="?",
+                    const=True, default=False,
+                    help='use mutable operations (default: immutable)')
+
     parser.add_argument('--memo', dest='memo', type=bool, nargs="?",
                     const=True, default=False,
                     help='use memoization for nodes (default: no memo)')
@@ -77,6 +81,8 @@ if __name__ == "__main__":
             generator = calculate_num_nodes(trav.traverse_unique_immutable)
         else:
             generator = trav.count_all_unique_top
+    elif args.mutable:
+        generator = trav.count_all_mutable_top
     else:
         if args.generator:
             generator = calculate_num_nodes(trav.traverse_all_immutable)
