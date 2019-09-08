@@ -1,6 +1,12 @@
 """
 Simple comparison of the performance of various board
 representations.
+
+USAGE:
+    pypy3 perf.py
+
+RESULTS:
+    PERF
 """
 
 from time import time
@@ -41,11 +47,21 @@ def benchmark(board, depth, mut=False):
     end = time()
 
     elapsed = end - start
-    return (result, elapsed)
+    result_str = f"{result:,}"
+    speed = result / (elapsed * 1000 * 1000)
+    nodes_per_sec = f"{speed:.2f}m nodes/sec"
+    return (result_str, elapsed, nodes_per_sec)
 
 if __name__ == "__main__":
-    for depth in range(10):
+    COLS = 7
+    ROWS = 6
+    board.Config.ROWS = board.Config.COLS = COLS
+    board_full.Config.ROWS = board_full.Config.COLS = COLS
+
+    print(f"Board size = {COLS} x {ROWS}")
+    for depth in range(1 + COLS * ROWS):
         print(f"Depth = {depth}:")
         print(f"  [board]            = {benchmark(board.Board(), depth)}")
         print(f"  [board_full_mut]   = {benchmark(board_full.Board(), depth, mut=True)}")
+
         #print(f"  [board_full_immut] = {benchmark(board_full.Board(), depth)}")

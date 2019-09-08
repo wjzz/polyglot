@@ -176,8 +176,8 @@ class Board:
 
     @property
     def legal_moves(self):
-        return [ i for i, col in enumerate(self._cols) 
-                 if col[-1] == Piece.E ]
+        ROWS = Config.ROWS
+        return [ i for i, l in enumerate(self._lens) if l < ROWS ]
 
     def apply_move(self, move):
         # assert (self._cols[move][-1] == Piece.E)
@@ -204,7 +204,7 @@ class Board:
         self._current = player.opposite
         self._moves_made += 1
         
-        self._invariant()
+        #self._invariant()
 
     def unmake_move(self, move):
         last = self._last
@@ -217,7 +217,7 @@ class Board:
         self._last = self._lasts[-1]
         self._moves_made -= 1
 
-        self._invariant()
+        #self._invariant()
      
     @property
     def is_win(self):
