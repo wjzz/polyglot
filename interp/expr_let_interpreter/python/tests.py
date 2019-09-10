@@ -170,6 +170,7 @@ class Tests(unittest.TestCase):
         test("2+2*2+2", 8)
         test("let x := 1 in x + x end", 2)
         test("let z := 2 in z * z end", 4)
+        test("1 + let x := 1 in x + x end", 3)
         test("let x := 2 in (let y := 3 in x + y end) end", 5)
 
 if __name__ == "__main__":
