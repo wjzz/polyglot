@@ -29,6 +29,26 @@ def token(tag):
 def tokenize(s):
     """Tokenize the given string s into a generator of tokens."""
 
+    # TODO: move these helpers somewhere or hide inside a class?
+    iterator = iter(s + " ")
+    unchar_v = None
+
+    def getchar():
+        nonlocal unchar_v
+
+        if unchar_v is not None:
+            char = unchar_v
+            unchar_v = None
+        else:
+            char = next(iterator)
+        return char
+            
+    def unchar(char):
+        nonlocal unchar_v
+        unchar_v = char
+
+    # start of the proper lexel
+    
     simple_tokens = {
         "(": Token.LPAREN,
         ")": Token.RPAREN,
@@ -36,26 +56,20 @@ def tokenize(s):
         "*": Token.TIMES,
     }
 
-    unchar = None
     # note: we add the sentinel at the end to make sure
     # the number will be consumed in full
-    iterator = iter(s + " ")
     while True:
         try:
-            if unchar is not None:
-                char = unchar
-                unchar = None
-            else:
-                char = next(iterator)
+            char = getchar()
             
             if char.isdigit():
                 number = 0
                 while char.isdigit():
                     number *= 10
                     number += int(char)
-                    char = next(iterator)
+                    char = getchar()
                 assert(char is not None)
-                unchar = char
+                unchar(char)
                 yield TokenInfo(tag = Token.NUMBER, value = number)
                 
             elif char in simple_tokens:
