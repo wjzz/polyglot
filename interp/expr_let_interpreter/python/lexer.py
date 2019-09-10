@@ -36,22 +36,28 @@ def tokenize(s):
         "*": Token.TIMES,
     }
 
-    reading_number = False
-    number = 0
+    unchar = None
     # note: we add the sentinel at the end to make sure
     # the number will be consumed in full
     iterator = iter(s + " ")
     while True:
         try:
-            char = next(iterator)
-            if not char.isdigit() and reading_number:
-                yield TokenInfo(tag = Token.NUMBER, value = number)
-                reading_number = False
-                number = 0
+            if unchar is not None:
+                char = unchar
+                unchar = None
+            else:
+                char = next(iterator)
+            
             if char.isdigit():
-                reading_number = True
-                number *= 10
-                number += int(char)
+                number = 0
+                while char.isdigit():
+                    number *= 10
+                    number += int(char)
+                    char = next(iterator)
+                assert(char is not None)
+                unchar = char
+                yield TokenInfo(tag = Token.NUMBER, value = number)
+                
             elif char in simple_tokens:
                 yield token(simple_tokens[char])
             elif char == " " or char == "\n":
