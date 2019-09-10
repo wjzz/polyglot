@@ -10,7 +10,7 @@ type Expr = Num int | Var Var | Let Var Expr Expr | Binary Op Expr Expr
 
 Concrete syntax (including parenthesis and additional rules):
 
-e ::= NUMBER | VAR | (e) | e + e | e * e | LET x := e in e
+e ::= NUMBER | VAR | (e) | e + e | e * e | LET x := e in e END
 
 To specify the parse and to enable testing without evaluating expressions 
 we introduce the following function (in pseudo Haskell+JS):
@@ -82,7 +82,7 @@ should print
 
 ```
 $ PROGRAM --eval
-let x := 2 + 2 in x + x<ENTER><EOF>
+let x := 2 + 2 in x + x end<ENTER><EOF>
 ```
 should print 
 ```

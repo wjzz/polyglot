@@ -16,6 +16,7 @@ class Token(AutoName):
     ID = auto()
     ASSIGN = auto()
     IN = auto()
+    END = auto()
     EOF = auto()
 
 # I always wanted to do this!!
@@ -92,6 +93,8 @@ def tokenize(s):
                     yield token(Token.LET)
                 elif value == "in":
                     yield token(Token.IN)
+                elif value == "end":
+                    yield token(Token.END)
                 else:
                     yield TokenInfo(tag = Token.ID, value = value)
             else:
@@ -113,6 +116,6 @@ if __name__ == "__main__":
     print(example)
     print(list(simplify(tokenize(example))))
 
-    example2 = "let x := 1 in x + x"
+    example2 = "let x := 1 in x + x end"
     print(example2)
     print(list(simplify(tokenize(example2))))

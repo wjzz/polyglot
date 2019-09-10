@@ -4,6 +4,7 @@ import expr as E
 # TOP ::= <EXPR> EOF
 # EXPR ::= <FACTOR> | <FACTOR> + <EXPR>
 # FACTOR ::= <ATOM> | <ATOM> * <FACTOR>
+# BINDING ::= let ID := <EXPR> in <EXPR>
 # ATOM = NUM | ( <EXPR> )
 
 class Parser:
