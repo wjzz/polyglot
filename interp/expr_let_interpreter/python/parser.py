@@ -4,8 +4,8 @@ import expr as E
 # TOP ::= <EXPR> EOF
 # EXPR ::= <FACTOR> | <FACTOR> + <EXPR>
 # FACTOR ::= <ATOM> | <ATOM> * <FACTOR>
-# BINDING ::= let ID := <EXPR> in <EXPR>
-# ATOM = NUM | ( <EXPR> )
+# BINDING ::= let ID := <EXPR> in <EXPR> end
+# ATOM = NUM | ID | BINDING | ( <EXPR> )
 
 class Parser:
     def __init__(self, tokens):
@@ -45,7 +45,6 @@ class Parser:
             expr = self.parse_expr()
             return E.BinaryOp(factor, E.Op.Plus, expr)
 
-
     def parse_factor(self):
         atom = self.parse_atom()
         token = self.peek
@@ -64,6 +63,17 @@ class Parser:
             return e
         elif token.tag == Token.NUMBER:
             return E.NumberLit(token.value)
+        elif token.tag == Token.ID:
+            return E.Variable(token.value)
+        elif token.tag == Token.LET:
+            var = self.get_token
+            assert (var.tag == Token.ID)
+            self.expect(Token.ASSIGN)
+            e1 = self.parse_expr()
+            self.expect(Token.IN)
+            e2 = self.parse_expr()
+            self.expect(Token.END)
+            return E.LetIn(var.value, e1, e2)
 
 def parse(s):
     """Takes an input string and output an expr AST"""

@@ -53,6 +53,15 @@ class Tests(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_parser(self):
+        v1 = "x"
+        self.assertEqual(parse(v1), Variable("x"))
+
+        v2 = "(x)"
+        self.assertEqual(parse(v2), Variable("x"))
+
+        v3 = "thisisalongvariable"
+        self.assertEqual(parse(v3), Variable(v3))
+
         e1 = "1"
         self.assertEqual(parse(e1), NumberLit(1))
 
@@ -124,16 +133,15 @@ class Tests(unittest.TestCase):
         self.assertEqual(parse(e11), r11)
 
         e12 = "let x := 1 in x end + 2"
-        r12 = LetIn(
-                "x",
-                NumberLit(1),
-                BinaryOp(
-                    Variable("x"),
+        r12 = BinaryOp(
+                    LetIn(
+                        "x",
+                        NumberLit(1),
+                        Variable("x")),
                     Op.Plus,
                     NumberLit(2)
-                ))
+                )
         self.assertEqual(parse(e12), r12)
-
 
     def test_evaluator(self):
         n = NumberLit(2)
