@@ -67,5 +67,5 @@ class Parser:
 def parse(s):
     """Takes an input string and output an expr AST"""
     tokens = tokenize(s)
-    print(list(tokenize(s)))
+    #print(list(tokenize(s)))
     return Parser(tokens).parse_top()
