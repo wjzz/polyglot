@@ -76,10 +76,24 @@ def tokenize(s):
                 yield token(simple_tokens[char])
             elif char == " " or char == "\n":
                 continue
-            # elif char == ":"
-
+            elif char == ":":
+                char2 = getchar()
+                if char2 != "=":
+                    raise Exception("Expected '=' after ':' [let _ := _ in _]")
+                yield token(Token.ASSIGN)
             elif char.isalnum():
-                pass
+                value = ""
+                while char.isalnum():
+                    value += char
+                    char = getchar()
+                assert(char is not None)
+                unchar(char)
+                if value == "let":
+                    yield token(Token.LET)
+                elif value == "in":
+                    yield token(Token.IN)
+                else:
+                    yield TokenInfo(tag = Token.ID, value = value)
             else:
                 raise Exception(f"found unknown character while tokenizing: [{char}]")
         except StopIteration:
