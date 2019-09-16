@@ -7,3 +7,9 @@
 */**/rust/**/target
 *.pdf
 
+/asm/
+/bits/python/
+/interp/bytecode/
+/interp/expr_let_interpreter/*
+/learning
+
