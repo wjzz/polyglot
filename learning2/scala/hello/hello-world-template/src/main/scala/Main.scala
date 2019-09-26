@@ -79,6 +79,8 @@ object Main extends App {
 
   def addPI(x: Double) = MyExample.PI + x
 
+  println(s"The value of addPi(0) is ${addPI(0)}")
+
   // Automatic imports
   //   These are:
 
