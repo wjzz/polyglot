@@ -1,5 +1,14 @@
+import scala.annotation.tailrec
+
 object MyExample {
   val PI: Double = 3.1415918
+}
+
+object Recursion {
+  @tailrec
+  def gcd(a: Int, b: Int): Int = 
+    if (b == 0) a
+    else gcd(b, a % b)
 }
 
 object Main extends App {
@@ -83,6 +92,9 @@ object Main extends App {
 
   def addPI(x: Double) = MyExample.PI + x
 
+  print("gcd(10, 3) = ")
+  println(Recursion.gcd(10, 3))
+
   // Automatic imports
   //   These are:
 
@@ -95,4 +107,31 @@ object Main extends App {
   // Boolean                        scala.Boolean
   // Object                         java.lang.Object
   // String                         java.lang.String
+
+  // Information aggregation
+
+  case class Note(
+    name: String,
+    duration: String,
+    octave: Int
+  )
+
+  val c3 = Note("C", "Quarter", 3)
+  println(c3)
+  println(c3.duration)
+
+  // Defining alternatives
+  sealed trait Symbol     // this is a new type
+  // the constructors are defined here:
+  case class Note2(name: String, duration: String, octave: Int) extends Symbol
+  case class Rest(duration: String) extends Symbol
+
+  // Pattern matching example:
+  def symbolDuration(symbol: Symbol): String = 
+    symbol match {
+      case Note2(name, duration, octave) => duration
+      case Rest(duration) => duration
+    }
+  println(symbolDuration(Note2("lala", "123", 4)))
+  println(symbolDuration(Rest("123")))
 }
