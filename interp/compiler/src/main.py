@@ -13,7 +13,7 @@ if __name__ == "__main__":
             with open(file_name, "r") as f:
                 lines = "".join(f.readlines())
                 # parse
-                c = parser.parse_stm(lines)
+                c = parser.parse_file(lines)
                 # compile
                 result = compile.compile_top(c)
                 # output 
@@ -37,6 +37,12 @@ if __name__ == "__main__":
                 print("\n/Error/ Unbound variable:", file=dest)
                 print(f"\t{err.var}", file=dest)
                 sys.exit(1)
+        except NotImplementedError:
+            print("Work in progress, NonImplmentedError", file=sys.stderr)
+            sys.exit(1)
+        except AssertionError:
+            print("Work in progress, AssertionError", file=sys.stderr)
+            sys.exit(1)
         except Exception as e:
             print("Got lines:\n\t", lines)
             print("Failed to compile the file", file=sys.stderr)

@@ -34,11 +34,14 @@ class Token(AutoName):
     MOD_EQ = auto()
     NUMBER = auto()
     PRINT = auto()
+    RETURN = auto()
     WHILE = auto()
     IF = auto()
     ELSE = auto()
     ID = auto()
     TYPE = auto()
+    PRAGMA = auto()
+    COMMA = auto()
     EOF = auto()
 
 # I always wanted to do this!!
@@ -94,6 +97,7 @@ def tokenize(s):
         "/": Token.DIVIDE,
         "%": Token.MOD,
         ";": Token.SEMI,
+        ",": Token.COMMA,
     }
 
     # note: we add the sentinel at the end to make sure
@@ -111,6 +115,11 @@ def tokenize(s):
                 assert(char is not None)
                 unchar(char)
                 yield token_info(tag = Token.NUMBER, value = number)
+            elif char == "#":
+                yield token(Token.PRAGMA)
+                while char != "\n":
+                    char = getchar()
+                unchar(char)
             elif char == "/":
                 char2 = getchar()
                 if char2 == "/":
@@ -190,8 +199,16 @@ def tokenize(s):
                     yield token(Token.ELSE)
                 elif value == "print":
                     yield token(Token.PRINT)
+                elif value == "return":
+                    yield token(Token.RETURN)
                 elif value == "long":
                     yield token_info(tag = Token.TYPE, value = "long")
+                elif value == "int":
+                    yield token_info(tag = Token.TYPE, value = "int")
+                elif value == "char":
+                    yield token_info(tag = Token.TYPE, value = "char")
+                elif value == "void":
+                    yield token_info(tag = Token.TYPE, value = "void")
                 else:
                     yield token_info(tag = Token.ID, value = value)
             else:

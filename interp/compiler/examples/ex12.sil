@@ -1,3 +1,6 @@
-for (long i = 0; i < 10; i += 1) {
-  print(i);
+#define EXAMPLE
+
+int main() {
+    print(123);
+    return 0;
 }

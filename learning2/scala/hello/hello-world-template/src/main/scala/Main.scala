@@ -22,11 +22,11 @@ object Main extends App {
 
   def abs(x: Double) = if (x >= 0) x else -x
 
-  println(abs(11))
-  println(abs(-11))
+  assert(abs(10) == 10)
+  assert(abs(-10) == 10)
 
   val b2 = 12 > 10 && !(10 == 10)
-  println(b2)
+  assert(!b2)
 
   def sqrt(x: Double) = {
     // recursive functions need an explicit return value in Scala
@@ -74,23 +74,20 @@ object Main extends App {
     val a = 123
     a + 1
   }
-  println(x)
+  assert(x == 124)
 
   // semicolons are optional, but they can be used to group many expressions
   // on one line
   val aa = 11; val zz = aa * aa
-  print("aa = ")
-  println(aa)
-
-  println("Hello, Tokyo!")
+  assert(zz == 121)
 
   // operators should be put on a trailing position if they don't fit on a single line
   val a = 12 +
     10
-  print("a = ")
-  println(a)
+  assert(a == 22)
 
   def addPI(x: Double) = MyExample.PI + x
+  println(s"The value of addPi(0) is ${addPI(0)}")
 
   print("gcd(10, 3) = ")
   println(Recursion.gcd(10, 3))
