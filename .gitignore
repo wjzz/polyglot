@@ -5,7 +5,10 @@
 */**/__pycache__/
 */**/.mypy_cache
 */**/rust/**/target
+*.agdai
+
 *.pdf
+
 
 /asm/
 /bits/python/
